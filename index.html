@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Smooth Operator — Command Reference</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -197,19 +197,203 @@ body::before{content:'';position:fixed;inset:0;z-index:9997;pointer-events:none;
 .card.hidden{display:none;}
 #no-r{display:none;padding:48px;color:var(--txm);font-size:13px;text-align:center;}
 
+
+/* ── TOUCH PERFORMANCE ────────────────────────────────── */
+.main,.page,.sb{-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+.tabbar{touch-action:pan-x;overscroll-behavior-x:contain;}
+.card,.ov-c,.bnav-btn,.sb-a,.tab{-webkit-tap-highlight-color:transparent;}
+/* safe area for notched iPhones */
+@supports(padding:env(safe-area-inset-bottom)){
+  #bottom-nav{padding-bottom:env(safe-area-inset-bottom);}
+  @media(max-width:768px){.app{padding-bottom:calc(64px + env(safe-area-inset-bottom));}}
+}
 ::-webkit-scrollbar{width:3px;}
 ::-webkit-scrollbar-track{background:var(--bg1);}
 ::-webkit-scrollbar-thumb{background:rgba(29,185,84,.2);border-radius:2px;}
 
-@media(max-width:768px){
-  .app{grid-template-columns:1fr;}
-  .sb{display:none;}
-  .hero{padding:32px 20px 28px;}
-  .ov-grid{padding:8px 20px 36px;}
-  .pg-inner{padding:24px 20px 60px;}
-  .tabbar{padding:0 12px;}
-  .tab{padding:12px 10px;}
+/* ── TABLET (≤1024px) ──────────────────────────────────── */
+@media(max-width:1024px){
+  .app{grid-template-columns:200px 1fr;}
+  .sb-name{font-size:14px;}
+  .hero{padding:44px 36px 38px;}
+  .ov-grid{padding:8px 36px 36px;}
+  .pg-inner{padding:28px 36px 64px;}
+  .tabbar{padding:0 20px;}
+  .grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr));}
 }
+
+/* ── MOBILE (≤768px) ──────────────────────────────────── */
+@media(max-width:768px){
+  /* disable custom cursor on touch */
+  body{cursor:auto;}
+  #cd,#cr{display:none;}
+
+  /* full-width layout — bottom nav takes 64px */
+  .app{grid-template-columns:1fr;padding-bottom:64px;}
+
+  /* sidebar — slides in as drawer from left */
+  .sb{
+    position:fixed;left:0;top:0;bottom:0;z-index:200;
+    transform:translateX(-100%);
+    transition:transform .26s cubic-bezier(.16,1,.3,1);
+    width:80vw;max-width:280px;min-width:0;
+    box-shadow:8px 0 40px rgba(0,0,0,.6);
+  }
+  .sb.open{transform:translateX(0);}
+
+  /* overlay behind drawer */
+  #sb-overlay{
+    display:none;position:fixed;inset:0;z-index:199;
+    background:rgba(0,0,0,.6);backdrop-filter:blur(3px);
+    -webkit-tap-highlight-color:transparent;
+  }
+  #sb-overlay.on{display:block;}
+
+  /* tab bar — icon only, no labels, fixed height */
+  .tabbar{padding:0;gap:0;height:48px;overflow-x:auto;}
+  .tab{
+    padding:0 11px;height:48px;font-size:0;/* hide label */
+    gap:0;flex-direction:column;align-items:center;justify-content:center;
+  }
+  .tab-ico{font-size:16px;line-height:1;}
+  .tab.on .tab-ico{transform:scale(1.15);}
+
+  /* hamburger */
+  #hamburger{
+    display:flex;align-items:center;justify-content:center;
+    width:48px;height:48px;min-width:48px;background:none;border:none;
+    color:var(--txm);font-size:20px;cursor:pointer;
+    flex-shrink:0;border-right:1px solid var(--bdr);
+    -webkit-tap-highlight-color:transparent;
+  }
+  #hamburger:active{color:var(--g2);}
+  #back-btn{
+    padding:0 12px;height:48px;font-size:20px;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* hero — compact */
+  .hero{padding:24px 16px 20px;}
+  .hero-eye{font-size:8px;margin-bottom:10px;}
+  .hero-h{font-size:clamp(30px,10vw,46px);}
+  .hero-sub{font-size:11.5px;line-height:1.7;margin-bottom:18px;}
+  .pills{gap:4px;}
+  .pill{font-size:8.5px;padding:3px 7px;}
+
+  /* overview — 2 cols, compact */
+  .ov-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:6px;padding:6px 12px 28px;
+  }
+  .ov-c{padding:11px;}
+  .ov-ico{font-size:15px;margin-bottom:4px;}
+  .ov-name{font-size:10.5px;}
+  .ov-cnt{font-size:8px;}
+  .ov-desc{display:none;}
+
+  /* page content */
+  .pg-inner{padding:16px 12px 80px;}
+
+  /* page header — compact */
+  .pg-hdr{gap:9px;margin-bottom:16px;padding-bottom:14px;}
+  .pg-ico{width:34px;height:34px;font-size:14px;flex-shrink:0;}
+  .pg-title{font-size:15px;}
+  .pg-desc{font-size:10px;max-width:none;}
+  .pg-count{font-size:8px;}
+
+  /* command grid — single column */
+  .grid{grid-template-columns:1fr;}
+
+  /* command cards — optimised for thumb tap */
+  .card{border-radius:9px;}
+  .bar{height:3px;}/* slightly thicker bar — easier to see */
+  .body{padding:11px 12px 12px;}
+  .cn{font-size:12px;margin-bottom:3px;}
+  .ca{font-size:9.5px;margin-bottom:4px;}
+  .cd{font-size:11px;line-height:1.65;margin-bottom:8px;}
+  .cf{gap:4px;flex-wrap:wrap;}
+  .tag{font-size:9px;padding:2px 6px;border-radius:4px;}
+  .cu{font-size:9px;padding:2px 7px;}
+
+  /* info box */
+  .info{font-size:11px;padding:10px 12px;line-height:1.7;}
+
+  /* source grid — 2 col */
+  .src-grid{grid-template-columns:repeat(2,1fr);gap:5px;}
+  .src-c{padding:8px 9px;}
+  .src-nm{font-size:10px;}
+  .src-kw{font-size:8px;}
+
+  /* autoplay signal grid */
+  .sig-grid{grid-template-columns:1fr;}
+  .sig{padding:10px 12px;}
+  .sig-t{font-size:9.5px;}
+  .sig-d{font-size:10px;}
+
+  /* sub label */
+  .sub-lbl{font-size:8px;margin-bottom:7px;}
+
+  /* sub spacing */
+  .sub{margin-bottom:20px;}
+
+  /* changelog */
+  .cl-wrap{gap:16px;}
+  .cl-ver-hdr{flex-wrap:wrap;gap:3px;padding:12px 14px;}
+  .cl-ver-num{font-size:11px;}
+  .cl-ver-name{font-size:10px;color:var(--txd);}
+  .cl-ver-date{margin-left:0;font-size:8.5px;width:100%;padding-top:1px;}
+  .cl-items{padding:10px 14px;gap:9px;}
+  .cl-item{gap:8px;}
+  .cl-bullet{width:6px;height:6px;margin-top:4px;}
+  .cl-it{font-size:11px;}
+  .cl-id{font-size:10px;line-height:1.6;}
+  .cl-tag{font-size:7px;padding:1px 4px;}
+
+  /* bottom nav */
+  #bottom-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:150;
+    background:var(--bg1);border-top:1px solid var(--bdr);
+    height:60px;padding-bottom:env(safe-area-inset-bottom, 0px);
+  }
+  .bnav-btn{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;background:none;border:none;color:var(--txm);
+    font-family:var(--fb);cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    transition:color .12s;padding:0 2px;
+    min-width:0;
+  }
+  .bnav-btn.on{color:var(--g2);}
+  .bnav-btn .bico{font-size:18px;line-height:1;}
+  .bnav-btn .bl{font-size:9px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+  .bnav-btn:active{color:var(--g2);transform:scale(.93);}
+}
+
+/* ── VERY SMALL PHONES (≤380px) ─────────────────────────── */
+@media(max-width:380px){
+  .ov-grid{gap:5px;padding:5px 10px 24px;}
+  .pg-inner{padding:12px 10px 80px;}
+  .hero{padding:20px 12px 18px;}
+  .hero-h{font-size:clamp(28px,11vw,40px);}
+  .tab{padding:0 8px;}
+  .tab-ico{font-size:14px;}
+  #hamburger{width:42px;min-width:42px;}
+  .card .body{padding:10px 11px;}
+  .cn{font-size:11.5px;}
+}
+
+/* ── DESKTOP hover-only styles ─────────────────────────── */
+@media(hover:hover){
+  .card:hover{border-color:var(--bdr2);transform:translateY(-1px);}
+  .ov-c:hover{border-color:var(--bdr2);transform:translateY(-2px);}
+  .sb-a:hover{background:var(--gdim);color:var(--tx);}
+  .tab:hover{color:var(--tx);}
+}
+
+/* hide bottom nav and hamburger on desktop */
+#bottom-nav{display:none;}
+#hamburger{display:none;}
+#sb-overlay{display:none;}
 </style>
 </head>
 <body>
@@ -258,6 +442,7 @@ body::before{content:'';position:fixed;inset:0;z-index:9997;pointer-events:none;
 
   <!-- TAB BAR -->
   <div class="tabbar" id="tabbar">
+    <button id="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
     <button id="back-btn" onclick="goBack()" title="Go back" style="opacity:.25;pointer-events:none;">←</button>
     <div class="tab on" data-tab="home"     onclick="showTab('home',null)"><span class="tab-ico">◈</span>Home</div>
     <div class="tab"     data-tab="play"     onclick="showTab('play',null)"><span class="tab-ico">♫</span>Playback</div>
@@ -678,31 +863,55 @@ let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.transform=`translate(${mx}px,${my}px)`;});
 (function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;cr.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(loop);})();
 
+// sidebar drawer (mobile)
+function toggleSidebar(){
+  document.querySelector('.sb').classList.toggle('open');
+  document.getElementById('sb-overlay').classList.toggle('on');
+}
+function closeSidebar(){
+  document.querySelector('.sb').classList.remove('open');
+  document.getElementById('sb-overlay').classList.remove('on');
+}
+
+
+
 // tab switching
 let curTab='home';
-const history=['home'];
+const pageHistory=['home'];
 
 function updateBackBtn(){
   const btn=document.getElementById('back-btn');
   if(!btn)return;
-  btn.style.opacity=history.length>1?'1':'0.25';
-  btn.style.pointerEvents=history.length>1?'auto':'none';
+  btn.style.opacity=pageHistory.length>1?'1':'0.25';
+  btn.style.pointerEvents=pageHistory.length>1?'auto':'none';
 }
 
+// Map tab id → bottom nav id
+const bnMap={home:'home',play:'play',search:'play',queue:'queue',controls:'queue',
+  filter:'filter',playlist:'filter',liked:'filter',dj:'more',config:'more',
+  utility:'more',sources:'more',autoplay:'more',changelog:'more'};
+
 function showTab(id,sbEl,fromBack){
-  if(id===curTab)return;
-  if(!fromBack){history.push(id);}
+  if(id===curTab&&!fromBack)return;
+  if(!fromBack){pageHistory.push(id);}
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
   document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
   document.querySelectorAll('.sb-a').forEach(a=>a.classList.remove('on'));
   const pg=document.getElementById('p-'+id);
-  if(pg){pg.classList.add('on');pg.scrollTop=0;}
+  if(pg){pg.classList.add('on');pg.scrollTop=0;window.scrollTo(0,0);}
   document.querySelectorAll('.tab[data-tab="'+id+'"]').forEach(t=>t.classList.add('on'));
   if(sbEl)sbEl.classList.add('on');
   else document.querySelectorAll('.sb-a').forEach(a=>{if(a.getAttribute('onclick')&&a.getAttribute('onclick').includes("'"+id+"'"))a.classList.add('on');});
   curTab=id;
   updateBackBtn();
+  closeSidebar();
   document.getElementById('no-r').style.display='none';
+  // sync bottom nav
+  const bnId=bnMap[id]||'more';
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('on'));
+  const bn=document.getElementById('bn-'+bnId);
+  if(bn)bn.classList.add('on');
+  // scroll active tab into view
   const activeTab=document.querySelector('.tab.on');
   if(activeTab)activeTab.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
   document.getElementById('qi').value='';
@@ -710,9 +919,9 @@ function showTab(id,sbEl,fromBack){
 }
 
 function goBack(){
-  if(history.length<=1)return;
-  history.pop();
-  const prev=history[history.length-1];
+  if(pageHistory.length<=1)return;
+  pageHistory.pop();
+  const prev=pageHistory[pageHistory.length-1];
   showTab(prev,null,true);
 }
 
@@ -740,6 +949,27 @@ function doSearch(q){
   if(firstPage&&firstPage!==curTab)showTab(firstPage,null);
   nr.style.display=found===0?'block':'none';
 }
+
+// swipe to open sidebar on mobile
+let touchStartX=0;
+document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;},{passive:true});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  if(touchStartX<24&&dx>60)toggleSidebar();
+  else if(dx<-60&&document.querySelector('.sb').classList.contains('open'))closeSidebar();
+},{passive:true});
 </script>
+
+<!-- Sidebar overlay (mobile) -->
+<div id="sb-overlay" onclick="closeSidebar()"></div>
+
+<!-- Bottom navigation (mobile only) -->
+<nav id="bottom-nav">
+  <button class="bnav-btn on" id="bn-home"   onclick="showTab('home',null)"><span class="bico">◈</span><span class="bl">Home</span></button>
+  <button class="bnav-btn"    id="bn-play"   onclick="showTab('play',null)"><span class="bico">♫</span><span class="bl">Play</span></button>
+  <button class="bnav-btn"    id="bn-queue"  onclick="showTab('queue',null)"><span class="bico">≡</span><span class="bl">Queue</span></button>
+  <button class="bnav-btn"    id="bn-filter" onclick="showTab('filter',null)"><span class="bico">◈</span><span class="bl">Filters</span></button>
+  <button class="bnav-btn"    id="bn-more"   onclick="toggleSidebar()"><span class="bico">⋯</span><span class="bl">More</span></button>
+</nav>
 </body>
 </html>
