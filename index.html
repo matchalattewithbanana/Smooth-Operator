@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="description" content="Smooth Operator — Full command reference for the ultimate Discord music bot. Play, filter, search, playlists, DJ mode and more.">
+<meta name="theme-color" content="#1db954">
+<title>Smooth Operator — Command Reference</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --void:        #030a06;
+  --void-1:      #070f0a;
+  --void-2:      #0d1a10;
+  --void-3:      #14201a;
+  --signal:      #1db954;
+  --signal-2:    #3de070;
+  --signal-3:    rgba(29,185,84,0.12);
+  --plasma:      #eef8f0;
+  --plasma-dim:  #92b89a;
+  --plasma-mid:  #5a8060;
+  --breach:      #ff3b5c;
+  --breach-dim:  rgba(255,59,92,0.15);
+  --gold:        #ffd700;
+  --gold-dim:    rgba(255,215,0,0.12);
+  --blue:        #4fc3f7;
+  --purple:      #ce93d8;
+  --orange:      #ffb347;
+  --pink:        #f48fb1;
+  --teal:        #4db6ac;
+  --border:      rgba(29,185,84,0.12);
+  --border-2:    rgba(29,185,84,0.22);
+  --display:     'Syne', sans-serif;
+  --sans:        'DM Sans', system-ui, sans-serif;
+  --mono:        'Space Mono', monospace;
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+  --spring:      cubic-bezier(0.34, 1.56, 0.64, 1);
+  --cinematic:   cubic-bezier(0.76, 0, 0.24, 1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { font-size: 16px; scroll-behavior: smooth; }
+body {
+  background: var(--void);
+  color: var(--plasma);
+  font-family: var(--sans);
+  font-weight: 300;
+  line-height: 1.6;
+  overflow-x: hidden;
+  cursor: none;
+}
+::selection { background: var(--signal); color: var(--void); }
+a { color: inherit; text-decoration: none; }
+
+/* ── GRAIN ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 9997;
+  pointer-events: none; opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+/* ── SCAN LINES ── */
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 9996; pointer-events: none;
+  background: repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(29,185,84,0.01) 2px,rgba(29,185,84,0.01) 4px);
+}
+
+/* ── CURSOR ── */
+#cur-dot, #cur-ring { position: fixed; top:0; left:0; pointer-events: none; z-index:10000; will-change: transform; }
+#cur-dot { width:6px; height:6px; background: var(--signal); border-radius:50%; margin:-3px 0 0 -3px; transition: transform 0.1s, opacity 0.3s; }
+#cur-ring { width:28px; height:28px; border:1.5px solid rgba(29,185,84,0.5); border-radius:50%; margin:-14px 0 0 -14px; transition: transform 0.12s var(--ease-out), opacity 0.3s; }
+body:hover #cur-dot, body:hover #cur-ring { opacity:1; }
+.cmd-card:hover ~ * #cur-ring, a:hover ~ * #cur-ring { transform: scale(1.5); }
+
+/* ── LAYOUT ── */
+.shell { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 240px; min-width: 240px;
+  background: var(--void-1);
+  border-right: 1px solid var(--border);
+  display: flex; flex-direction: column;
+  position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; z-index: 100;
+}
+.sb-logo {
+  padding: 28px 20px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.sb-logo-name {
+  font-family: var(--display); font-size: 17px; font-weight: 800;
+  letter-spacing: -0.02em; color: var(--signal);
+  line-height: 1.2;
+}
+.sb-logo-tag { font-size: 10px; color: var(--plasma-mid); font-family: var(--mono); margin-top: 4px; letter-spacing: 0.08em; }
+.sb-nav { padding: 12px 0; flex: 1; }
+.sb-label { font-size: 9px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--plasma-mid); padding: 8px 20px 4px; }
+.sb-link {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 20px; font-size: 13px; color: var(--plasma-dim);
+  cursor: none; transition: background 0.15s, color 0.15s; border-left: 2px solid transparent;
+  font-weight: 400;
+}
+.sb-link:hover { background: var(--signal-3); color: var(--plasma); }
+.sb-link.active { background: var(--signal-3); color: var(--signal-2); border-left-color: var(--signal); font-weight: 500; }
+.sb-link .sb-icon { font-size: 14px; width: 18px; text-align: center; }
+.sb-count { margin-left: auto; font-family: var(--mono); font-size: 9px; color: var(--plasma-mid); background: var(--void-3); padding: 1px 5px; border-radius: 3px; }
+.sb-divider { height: 1px; background: var(--border); margin: 8px 16px; }
+.sb-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+.sb-footer-text { font-size: 10px; color: var(--plasma-mid); line-height: 1.6; }
+.sb-footer strong { color: var(--signal); }
+
+/* ── MAIN ── */
+.main { flex: 1; min-width: 0; }
+
+/* ── HERO ── */
+.hero {
+  padding: 72px 56px 56px;
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.hero::before {
+  content: ''; position: absolute; top: -60px; right: -60px;
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(29,185,84,0.08) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-tag { font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--signal); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.hero-tag::before { content: ''; width: 24px; height: 1px; background: var(--signal); }
+.hero-title { font-family: var(--display); font-size: clamp(36px, 5vw, 62px); font-weight: 800; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 16px; }
+.hero-title span { color: var(--signal); }
+.hero-desc { font-size: 15px; color: var(--plasma-dim); max-width: 540px; line-height: 1.7; margin-bottom: 32px; }
+.hero-pills { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 500;
+  border: 1px solid; font-family: var(--mono);
+}
+.pill-green { color: var(--signal-2); border-color: rgba(29,185,84,0.3); background: rgba(29,185,84,0.06); }
+.pill-gold  { color: var(--gold); border-color: rgba(255,215,0,0.3); background: rgba(255,215,0,0.06); }
+.pill-blue  { color: var(--blue); border-color: rgba(79,195,247,0.3); background: rgba(79,195,247,0.06); }
+.pill-purple{ color: var(--purple); border-color: rgba(206,147,216,0.3); background: rgba(206,147,216,0.06); }
+
+/* ── SEARCH BAR ── */
+.search-wrap { padding: 20px 56px 0; }
+.search-box {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--void-2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 10px 16px; max-width: 480px;
+  transition: border-color 0.2s;
+}
+.search-box:focus-within { border-color: var(--signal); }
+.search-box input {
+  background: none; border: none; outline: none;
+  color: var(--plasma); font-family: var(--sans); font-size: 13px; flex: 1;
+}
+.search-box input::placeholder { color: var(--plasma-mid); }
+.search-icon { color: var(--plasma-mid); font-size: 13px; }
+
+/* ── CATEGORY SECTION ── */
+.cat-section { padding: 48px 56px 0; scroll-margin-top: 80px; }
+.cat-section:last-child { padding-bottom: 80px; }
+.cat-header { display: flex; align-items: flex-start; gap: 16px; margin-bottom: 32px; }
+.cat-icon {
+  width: 44px; height: 44px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0; border: 1px solid;
+}
+.cat-title-wrap {}
+.cat-title { font-family: var(--display); font-size: 22px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.2; }
+.cat-desc { font-size: 12px; color: var(--plasma-mid); margin-top: 4px; max-width: 480px; }
+.cat-count { font-family: var(--mono); font-size: 10px; color: var(--plasma-mid); margin-top: 6px; }
+
+/* ── SUB-SECTION ── */
+.sub-section { margin-bottom: 32px; }
+.sub-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--plasma-mid); margin-bottom: 12px; padding: 6px 0;
+  border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px;
+}
+.sub-label::before { content: ''; width: 12px; height: 1px; background: var(--signal); opacity: 0.5; }
+
+/* ── CMD GRID ── */
+.cmd-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; }
+
+/* ── CMD CARD ── */
+.cmd-card {
+  background: var(--void-1); border: 1px solid var(--border);
+  border-radius: 8px; padding: 0; overflow: hidden;
+  cursor: none; transition: border-color 0.2s, transform 0.15s;
+  position: relative;
+}
+.cmd-card:hover { border-color: var(--border-2); transform: translateY(-1px); }
+.cc-bar { height: 2px; width: 100%; }
+.cc-body { padding: 12px 14px 14px; }
+.cmd-name { font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--plasma); margin-bottom: 4px; }
+.cmd-name .pfx { color: var(--signal-2); }
+.cmd-aliases { font-family: var(--mono); font-size: 10px; color: var(--plasma-mid); margin-bottom: 6px; }
+.cmd-desc { font-size: 11.5px; color: var(--plasma-mid); line-height: 1.6; margin-bottom: 8px; }
+.cmd-footer { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+.cmd-perm {
+  font-size: 9.5px; font-family: var(--mono); padding: 2px 6px; border-radius: 3px;
+  border: 1px solid rgba(255,215,0,0.25); color: var(--gold); background: rgba(255,215,0,0.06);
+}
+.cmd-usage {
+  font-size: 9.5px; font-family: var(--mono); padding: 2px 6px; border-radius: 3px;
+  border: 1px solid var(--border); color: var(--plasma-dim); background: var(--void-2);
+  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.cmd-card:hover .cmd-name { color: var(--signal-2); transition: color 0.2s; }
+
+/* ── CATEGORY COLORS ── */
+.cmd-card[data-cat="music"] .cc-bar      { background: linear-gradient(90deg,#1db954,#3de070); }
+.cmd-card[data-cat="search"] .cc-bar     { background: linear-gradient(90deg,#4fc3f7,#0288d1); }
+.cmd-card[data-cat="queue"] .cc-bar      { background: linear-gradient(90deg,#ce93d8,#8e24aa); }
+.cmd-card[data-cat="filter"] .cc-bar     { background: linear-gradient(90deg,#ffb347,#e65100); }
+.cmd-card[data-cat="playlist"] .cc-bar   { background: linear-gradient(90deg,#ffd700,#f57f17); }
+.cmd-card[data-cat="liked"] .cc-bar      { background: linear-gradient(90deg,#f48fb1,#e91e63); }
+.cmd-card[data-cat="controls"] .cc-bar   { background: linear-gradient(90deg,#4db6ac,#00796b); }
+.cmd-card[data-cat="config"] .cc-bar     { background: linear-gradient(90deg,#80cbc4,#00695c); }
+.cmd-card[data-cat="dj"] .cc-bar         { background: linear-gradient(90deg,#ff7043,#bf360c); }
+.cmd-card[data-cat="utility"] .cc-bar    { background: linear-gradient(90deg,#a5d6a7,#388e3c); }
+
+/* ── DIVIDER ── */
+.section-divider { height: 1px; background: var(--border); margin: 0 56px; }
+
+/* ── OVERVIEW CARDS ── */
+.ov-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; padding: 32px 56px; }
+.ov-card {
+  background: var(--void-1); border: 1px solid var(--border);
+  border-radius: 10px; padding: 20px; cursor: none;
+  transition: border-color 0.2s, transform 0.15s;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.ov-card:hover { border-color: var(--border-2); transform: translateY(-2px); }
+.ov-icon { font-size: 22px; }
+.ov-name { font-family: var(--display); font-size: 14px; font-weight: 700; }
+.ov-count { font-family: var(--mono); font-size: 10px; color: var(--plasma-mid); }
+.ov-desc { font-size: 11px; color: var(--plasma-mid); line-height: 1.5; }
+
+/* ── SECTION SEPARATOR TAG ── */
+.section-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--mono); font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase;
+  color: var(--signal); background: rgba(29,185,84,0.08);
+  border: 1px solid rgba(29,185,84,0.2); border-radius: 3px; padding: 3px 8px;
+  margin-bottom: 8px;
+}
+
+/* ── NO RESULTS ── */
+#no-results { display: none; padding: 60px 56px; color: var(--plasma-mid); font-size: 14px; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: var(--void-1); }
+::-webkit-scrollbar-thumb { background: rgba(29,185,84,0.3); border-radius: 2px; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .hero { padding: 40px 24px 32px; }
+  .search-wrap { padding: 16px 24px 0; }
+  .cat-section { padding: 36px 24px 0; }
+  .ov-grid { padding: 24px; }
+  .cmd-grid { grid-template-columns: 1fr; }
+  .section-divider { margin: 0 24px; }
+  #no-results { padding: 40px 24px; }
+}
+</style>
+</head>
+<body>
+
+<div id="cur-dot"></div>
+<div id="cur-ring"></div>
+
+<div class="shell">
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-name">Smooth Operator</div>
+      <div class="sb-logo-tag">MUSIC BOT · CMD REF v1.0</div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-label">Navigation</div>
+      <a class="sb-link active" href="#overview" onclick="setActive(this)">
+        <span class="sb-icon">◈</span> Overview <span class="sb-count" id="total-count">0</span>
+      </a>
+      <div class="sb-divider"></div>
+      <div class="sb-label">Categories</div>
+      <a class="sb-link" href="#cat-music"     onclick="setActive(this)"><span class="sb-icon">♫</span> Music Playback   <span class="sb-count">14</span></a>
+      <a class="sb-link" href="#cat-search"    onclick="setActive(this)"><span class="sb-icon">⌕</span> Search           <span class="sb-count">2</span></a>
+      <a class="sb-link" href="#cat-queue"     onclick="setActive(this)"><span class="sb-icon">≡</span> Queue            <span class="sb-count">14</span></a>
+      <a class="sb-link" href="#cat-controls"  onclick="setActive(this)"><span class="sb-icon">⏵</span> Controls         <span class="sb-count">14</span></a>
+      <a class="sb-link" href="#cat-filter"    onclick="setActive(this)"><span class="sb-icon">◈</span> Audio Filters    <span class="sb-count">17</span></a>
+      <a class="sb-link" href="#cat-playlist"  onclick="setActive(this)"><span class="sb-icon">▤</span> Playlists        <span class="sb-count">6</span></a>
+      <a class="sb-link" href="#cat-liked"     onclick="setActive(this)"><span class="sb-icon">♡</span> Liked Songs      <span class="sb-count">5</span></a>
+      <a class="sb-link" href="#cat-dj"        onclick="setActive(this)"><span class="sb-icon">⚡</span> DJ System        <span class="sb-count">8</span></a>
+      <a class="sb-link" href="#cat-config"    onclick="setActive(this)"><span class="sb-icon">⚙</span> Configuration    <span class="sb-count">11</span></a>
+      <a class="sb-link" href="#cat-utility"   onclick="setActive(this)"><span class="sb-icon">⊕</span> Utility          <span class="sb-count">6</span></a>
+    </nav>
+    <div class="sb-footer">
+      <div class="sb-footer-text">
+        Prefix: <strong>-</strong><br>
+        Also supports <strong>/slash</strong> commands<br>
+        6 Lavalink nodes · Zero lag
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main" id="main-content">
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-tag">Music Bot · Command Reference</div>
+      <h1 class="hero-title">Smooth<br><span>Operator</span></h1>
+      <p class="hero-desc">Premium music experience for Discord. Stream from YouTube, Spotify, Apple Music, Deezer, Yandex Music, SoundCloud and more — zero lag, lossless audio, full DJ control.</p>
+      <div class="hero-pills">
+        <span class="pill pill-green">♫ Multi-platform</span>
+        <span class="pill pill-gold">⚡ 6 Lavalink Nodes</span>
+        <span class="pill pill-blue">/ Slash Commands</span>
+        <span class="pill pill-purple">♡ Liked Songs</span>
+        <span class="pill pill-green">◈ 17 Audio Filters</span>
+        <span class="pill pill-gold">↻ 24/7 Mode</span>
+      </div>
+    </section>
+
+    <!-- SEARCH -->
+    <div class="search-wrap">
+      <div class="search-box">
+        <span class="search-icon">⌕</span>
+        <input type="text" id="search-input" placeholder="Search commands… e.g. bassboost, playlist, skip" autocomplete="off">
+      </div>
+    </div>
+
+    <!-- OVERVIEW GRID -->
+    <div class="ov-grid" id="overview-grid">
+      <a class="ov-card" href="#cat-music"><div class="ov-icon">♫</div><div class="ov-name">Music Playback</div><div class="ov-count">14 commands</div><div class="ov-desc">Play, pause, skip, stop, seek, forward, rewind, replay</div></a>
+      <a class="ov-card" href="#cat-search"><div class="ov-icon">⌕</div><div class="ov-name">Search</div><div class="ov-count">2 commands</div><div class="ov-desc">Interactive search with button selection</div></a>
+      <a class="ov-card" href="#cat-queue"><div class="ov-icon">≡</div><div class="ov-name">Queue</div><div class="ov-count">14 commands</div><div class="ov-desc">Queue view, loop, shuffle, volume, remove, move, bump</div></a>
+      <a class="ov-card" href="#cat-controls"><div class="ov-icon">⏵</div><div class="ov-name">Controls</div><div class="ov-count">14 commands</div><div class="ov-desc">Grab, voteskip, connect, movebot, cleanqueue, removedupes</div></a>
+      <a class="ov-card" href="#cat-filter"><div class="ov-icon">◈</div><div class="ov-name">Audio Filters</div><div class="ov-count">17 filters</div><div class="ov-desc">Bassboost, nightcore, lofi, 8D, daycore, chipmunk and more</div></a>
+      <a class="ov-card" href="#cat-playlist"><div class="ov-icon">▤</div><div class="ov-name">Playlists</div><div class="ov-count">6 commands</div><div class="ov-desc">Save, load, list, delete, addtrack, import playlists</div></a>
+      <a class="ov-card" href="#cat-liked"><div class="ov-icon">♡</div><div class="ov-name">Liked Songs</div><div class="ov-count">5 commands</div><div class="ov-desc">Like, unlike, view, play and clear your liked songs</div></a>
+      <a class="ov-card" href="#cat-dj"><div class="ov-icon">⚡</div><div class="ov-name">DJ System</div><div class="ov-count">8 commands</div><div class="ov-desc">DJ role, DJ mode, restrict commands, forcefix</div></a>
+      <a class="ov-card" href="#cat-config"><div class="ov-icon">⚙</div><div class="ov-name">Configuration</div><div class="ov-count">11 commands</div><div class="ov-desc">Prefix, announce, buttons, 24/7, autoplay, settings</div></a>
+      <a class="ov-card" href="#cat-utility"><div class="ov-icon">⊕</div><div class="ov-name">Utility</div><div class="ov-count">6 commands</div><div class="ov-desc">Ping, stats, invite, help, history, voicechannelstatus</div></a>
+    </div>
+
+    <div id="no-results">No commands matched your search.</div>
+    <div id="all-sections">
+
+    <!-- ═══════════════════════════════ MUSIC PLAYBACK ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-music">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(29,185,84,0.1);border-color:rgba(29,185,84,0.3);color:#3de070;">♫</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">Music Playback</div>
+          <div class="cat-desc">Play songs and playlists from YouTube, Spotify, Apple Music, Deezer, Yandex Music, SoundCloud, Tidal and more</div>
+          <div class="cat-count">14 commands</div>
+        </div>
+      </div>
+
+      <div class="sub-section">
+        <div class="sub-label">Playback</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>play</div><div class="cmd-aliases">aliases: p</div><div class="cmd-desc">Play a song or playlist from YouTube, Spotify, Apple Music, Deezer, Yandex Music, SoundCloud, or any URL.</div><div class="cmd-footer"><span class="cmd-usage">-play &lt;song name or URL&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>pause</div><div class="cmd-desc">Pause the current track.</div><div class="cmd-footer"><span class="cmd-usage">-pause</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>resume</div><div class="cmd-aliases">aliases: r</div><div class="cmd-desc">Resume a paused track.</div><div class="cmd-footer"><span class="cmd-usage">-resume</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>skip</div><div class="cmd-aliases">aliases: s, next</div><div class="cmd-desc">Skip the current track and play the next one in queue.</div><div class="cmd-footer"><span class="cmd-usage">-skip</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>stop</div><div class="cmd-aliases">aliases: dc, leave</div><div class="cmd-desc">Stop playback, clear the queue, and disconnect from voice.</div><div class="cmd-footer"><span class="cmd-usage">-stop</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>seek</div><div class="cmd-desc">Seek to a specific position in the current track.</div><div class="cmd-footer"><span class="cmd-usage">-seek 1:30  |  -seek 90</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>forward</div><div class="cmd-aliases">aliases: ff</div><div class="cmd-desc">Fast forward the track by N seconds (default 10).</div><div class="cmd-footer"><span class="cmd-usage">-forward [seconds]</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>rewind</div><div class="cmd-aliases">aliases: rw</div><div class="cmd-desc">Rewind the track by N seconds (default 10).</div><div class="cmd-footer"><span class="cmd-usage">-rewind [seconds]</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>replay</div><div class="cmd-aliases">aliases: restart</div><div class="cmd-desc">Restart the current track from the beginning.</div><div class="cmd-footer"><span class="cmd-usage">-replay</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>previous</div><div class="cmd-aliases">aliases: prev, back</div><div class="cmd-desc">Play the previously played track.</div><div class="cmd-footer"><span class="cmd-usage">-previous</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>skipto</div><div class="cmd-aliases">aliases: jump, jumpto</div><div class="cmd-desc">Jump directly to a specific position in the queue, skipping all tracks before it.</div><div class="cmd-footer"><span class="cmd-usage">-skipto &lt;position&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>nowplaying</div><div class="cmd-aliases">aliases: np</div><div class="cmd-desc">Show the currently playing track with progress bar, source, loop mode, volume, and queue count.</div><div class="cmd-footer"><span class="cmd-usage">-nowplaying</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>connect</div><div class="cmd-aliases">aliases: join</div><div class="cmd-desc">Connect the bot to your voice channel without playing anything.</div><div class="cmd-footer"><span class="cmd-usage">-connect</span></div></div></div>
+          <div class="cmd-card" data-cat="music"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>247</div><div class="cmd-aliases">aliases: nonstop</div><div class="cmd-desc">Toggle 24/7 mode — bot stays in voice permanently and rejoin if kicked. DJ only.</div><div class="cmd-footer"><span class="cmd-perm">DJ</span><span class="cmd-usage">-247</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ SEARCH ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-search">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(79,195,247,0.1);border-color:rgba(79,195,247,0.3);color:#4fc3f7;">⌕</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">Search</div>
+          <div class="cat-desc">Interactive song search with clickable results — pick your track from a list</div>
+          <div class="cat-count">2 commands</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Search Commands</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="search"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>search</div><div class="cmd-aliases">aliases: find, sc</div><div class="cmd-desc">Search YouTube for a song and pick from 5 results using interactive number buttons. 30 second timeout.</div><div class="cmd-footer"><span class="cmd-usage">-search &lt;song name&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="search"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>lyricssearch</div><div class="cmd-aliases">aliases: ls, findlyrics</div><div class="cmd-desc">Search lyrics for any song by name using an external lyrics API.</div><div class="cmd-footer"><span class="cmd-usage">-lyricssearch &lt;song name&gt;</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ QUEUE ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-queue">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(206,147,216,0.1);border-color:rgba(206,147,216,0.3);color:#ce93d8;">≡</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">Queue</div>
+          <div class="cat-desc">Manage the playback queue — view, reorder, loop, shuffle, volume, seek</div>
+          <div class="cat-count">14 commands</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Queue Management</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>queue</div><div class="cmd-aliases">aliases: q</div><div class="cmd-desc">View the current queue with paginated results (10 tracks per page).</div><div class="cmd-footer"><span class="cmd-usage">-queue [page]</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>loop</div><div class="cmd-aliases">aliases: repeat</div><div class="cmd-desc">Set loop mode — off, track (repeat current), or queue (repeat all).</div><div class="cmd-footer"><span class="cmd-usage">-loop &lt;off|track|queue&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>shuffle</div><div class="cmd-desc">Shuffle all tracks currently in the queue.</div><div class="cmd-footer"><span class="cmd-usage">-shuffle</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>remove</div><div class="cmd-aliases">aliases: rm</div><div class="cmd-desc">Remove a specific track from the queue by its position number.</div><div class="cmd-footer"><span class="cmd-usage">-remove &lt;position&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>move</div><div class="cmd-aliases">aliases: mv</div><div class="cmd-desc">Move a track from one queue position to another.</div><div class="cmd-footer"><span class="cmd-usage">-move &lt;from&gt; &lt;to&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>bump</div><div class="cmd-desc">Move a track to position #1 in the queue so it plays next.</div><div class="cmd-footer"><span class="cmd-usage">-bump &lt;position&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>clearqueue</div><div class="cmd-aliases">aliases: cq, clear</div><div class="cmd-desc">Clear all tracks from the queue, keeping the currently playing track. DJ only.</div><div class="cmd-footer"><span class="cmd-perm">DJ</span><span class="cmd-usage">-clearqueue</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>volume</div><div class="cmd-aliases">aliases: vol</div><div class="cmd-desc">Set the playback volume. Range: 0 to 200. Default is 100.</div><div class="cmd-footer"><span class="cmd-usage">-volume &lt;0–200&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>autoplay</div><div class="cmd-aliases">aliases: ap</div><div class="cmd-desc">Toggle autoplay — when the queue ends, the bot automatically queues a related track and keeps playing.</div><div class="cmd-footer"><span class="cmd-usage">-autoplay</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>previousadd</div><div class="cmd-aliases">aliases: addprev</div><div class="cmd-desc">Add the last played track back to the end of the queue without skipping the current track.</div><div class="cmd-footer"><span class="cmd-usage">-previousadd</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>history</div><div class="cmd-aliases">aliases: recent</div><div class="cmd-desc">Show recently played tracks in this server with timestamps. Paginated.</div><div class="cmd-footer"><span class="cmd-usage">-history [page]</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>lyrics</div><div class="cmd-aliases">aliases: ly</div><div class="cmd-desc">Fetch lyrics for the currently playing track automatically.</div><div class="cmd-footer"><span class="cmd-usage">-lyrics</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>removedupes</div><div class="cmd-aliases">aliases: dedup</div><div class="cmd-desc">Remove all duplicate tracks from the queue, keeping only the first occurrence of each.</div><div class="cmd-footer"><span class="cmd-usage">-removedupes</span></div></div></div>
+          <div class="cmd-card" data-cat="queue"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>cleanqueue</div><div class="cmd-aliases">aliases: clean, leavecleanup</div><div class="cmd-desc">Remove all tracks from the queue that were requested by members who have since left the voice channel.</div><div class="cmd-footer"><span class="cmd-usage">-cleanqueue</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ CONTROLS ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-controls">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(77,182,172,0.1);border-color:rgba(77,182,172,0.3);color:#4db6ac;">⏵</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">Controls</div>
+          <div class="cat-desc">Grab track info, voteskip, bot movement, and advanced player controls</div>
+          <div class="cat-count">14 commands</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Player Controls</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="controls"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>grab</div><div class="cmd-aliases">aliases: save, fav</div><div class="cmd-desc">DM yourself the currently playing track's title, artist, duration, and link.</div><div class="cmd-footer"><span class="cmd-usage">-grab</span></div></div></div>
+          <div class="cmd-card" data-cat="controls"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>voteskip</div><div class="cmd-aliases">aliases: vs</div><div class="cmd-desc">Vote to skip the current track. Requires majority of listeners (50%+). Votes expire after 60 seconds.</div><div class="cmd-footer"><span class="cmd-usage">-voteskip</span></div></div></div>
+          <div class="cmd-card" data-cat="controls"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>movebot</div><div class="cmd-aliases">aliases: summon, moveme</div><div class="cmd-desc">Move the bot to your current voice channel. DJ only.</div><div class="cmd-footer"><span class="cmd-perm">DJ</span><span class="cmd-usage">-movebot</span></div></div></div>
+          <div class="cmd-card" data-cat="controls"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>forcefix</div><div class="cmd-aliases">aliases: fix</div><div class="cmd-desc">Force-fix a broken player — fully reconnects, restores the queue, volume, and loop mode, then resumes. DJ only.</div><div class="cmd-footer"><span class="cmd-perm">DJ</span><span class="cmd-usage">-forcefix</span></div></div></div>
+          <div class="cmd-card" data-cat="controls"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>voicechannelstatus</div><div class="cmd-aliases">aliases: vcstatus, vcs</div><div class="cmd-desc">Toggle automatically updating the voice channel name to show the currently playing song. DJ only.</div><div class="cmd-footer"><span class="cmd-perm">DJ</span><span class="cmd-usage">-vcstatus</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ AUDIO FILTERS ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-filter">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(255,179,71,0.1);border-color:rgba(255,179,71,0.3);color:#ffb347;">◈</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">Audio Filters</div>
+          <div class="cat-desc">17 real-time DSP audio filters processed by Lavalink — applied instantly with no quality loss</div>
+          <div class="cat-count">17 filters · 1 command</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Filter Command</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter</div><div class="cmd-aliases">aliases: f, fx</div><div class="cmd-desc">Apply an audio filter by name. Use <code>-filter list</code> to see all filters. Use <code>-filter clear</code> to remove all filters.</div><div class="cmd-footer"><span class="cmd-usage">-filter &lt;name|list|clear&gt;</span></div></div></div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Available Filters</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter bassboost</div><div class="cmd-desc">Heavy bass boost via 10-band equalizer. Bumps the low end significantly.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter deepbass</div><div class="cmd-desc">Extreme sub-bass boost. Even heavier low-end than bassboost.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter nightcore</div><div class="cmd-desc">Speed and pitch increased to 1.3× — the classic nightcore effect.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter daycore</div><div class="cmd-desc">Speed and pitch decreased to 0.75× — the reverse of nightcore (slowed + reverb vibe).</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter vaporwave</div><div class="cmd-desc">Speed and pitch at 0.8× for that nostalgic vaporwave aesthetic.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter slowed</div><div class="cmd-desc">Slows playback to 0.85× speed without changing pitch.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter chipmunk</div><div class="cmd-desc">High pitch + speed — chipmunk/alvin voice effect.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter darthvader</div><div class="cmd-desc">Pitch dropped to 0.5× — deep Darth Vader voice effect.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter lofi</div><div class="cmd-desc">Combined low-pass filter + EQ boost + slight slowdown for that lo-fi hip hop feel.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter 8d</div><div class="cmd-desc">Rotating stereo panning at 0.2Hz — audio feels like it's moving around your head.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter karaoke</div><div class="cmd-desc">Removes the center channel to suppress vocals — karaoke mode.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter tremolo</div><div class="cmd-desc">Tremolo effect — rapid volume oscillation at 2Hz.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter vibrato</div><div class="cmd-desc">Vibrato effect — pitch oscillation at 2Hz.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter vibration</div><div class="cmd-desc">Stronger vibrato at 4Hz — intense pitch wobble effect.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter soft</div><div class="cmd-desc">Low-pass smoothing filter — removes harsh high frequencies for a warmer sound.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter pop</div><div class="cmd-desc">Mid-range EQ boost tuned for pop music — enhances vocals and clarity.</div></div></div>
+          <div class="cmd-card" data-cat="filter"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>filter treble</div><div class="cmd-desc">High-frequency EQ boost — adds brightness and air to the sound.</div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ PLAYLISTS ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-playlist">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(255,215,0,0.1);border-color:rgba(255,215,0,0.3);color:#ffd700;">▤</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">Playlists</div>
+          <div class="cat-desc">Save, manage and load personal playlists — stored permanently in MongoDB per user</div>
+          <div class="cat-count">6 commands</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Playlist Commands</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="playlist"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>playlist save</div><div class="cmd-aliases">aliases: pl save</div><div class="cmd-desc">Save the current queue as a named playlist. Updates if name already exists.</div><div class="cmd-footer"><span class="cmd-usage">-playlist save &lt;name&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="playlist"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>playlist load</div><div class="cmd-aliases">aliases: pl load</div><div class="cmd-desc">Load a saved playlist into the queue. Resolves tracks via search.</div><div class="cmd-footer"><span class="cmd-usage">-playlist load &lt;name&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="playlist"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>playlist list</div><div class="cmd-aliases">aliases: pl list</div><div class="cmd-desc">View all your saved playlists with track counts.</div><div class="cmd-footer"><span class="cmd-usage">-playlist list</span></div></div></div>
+          <div class="cmd-card" data-cat="playlist"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>playlist delete</div><div class="cmd-aliases">aliases: pl delete</div><div class="cmd-desc">Permanently delete a saved playlist by name.</div><div class="cmd-footer"><span class="cmd-usage">-playlist delete &lt;name&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="playlist"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>playlist addnowplaying</div><div class="cmd-aliases">aliases: pl addnow</div><div class="cmd-desc">Add the currently playing track to an existing playlist without stopping playback.</div><div class="cmd-footer"><span class="cmd-usage">-playlist addnowplaying &lt;name&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="playlist"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>playlist savequeue</div><div class="cmd-aliases">aliases: pl savequeue</div><div class="cmd-desc">Save the entire current queue as a new playlist in one command.</div><div class="cmd-footer"><span class="cmd-usage">-playlist savequeue &lt;name&gt;</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ LIKED SONGS ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-liked">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(244,143,177,0.1);border-color:rgba(244,143,177,0.3);color:#f48fb1;">♡</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">Liked Songs</div>
+          <div class="cat-desc">Your personal music library — like tracks while they play, saved permanently across all servers</div>
+          <div class="cat-count">5 commands</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Liked Songs Commands</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="liked"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>liked add</div><div class="cmd-aliases">aliases: like</div><div class="cmd-desc">Like the currently playing track and add it to your personal liked songs library.</div><div class="cmd-footer"><span class="cmd-usage">-liked add</span></div></div></div>
+          <div class="cmd-card" data-cat="liked"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>liked remove</div><div class="cmd-aliases">aliases: dislike</div><div class="cmd-desc">Remove the currently playing track from your liked songs.</div><div class="cmd-footer"><span class="cmd-usage">-liked remove</span></div></div></div>
+          <div class="cmd-card" data-cat="liked"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>liked list</div><div class="cmd-aliases">aliases: showliked, favorites</div><div class="cmd-desc">View all your liked songs with titles and durations. Paginated (10 per page).</div><div class="cmd-footer"><span class="cmd-usage">-liked list [page]</span></div></div></div>
+          <div class="cmd-card" data-cat="liked"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>liked play</div><div class="cmd-aliases">aliases: playliked</div><div class="cmd-desc">Queue up to 100 of your liked songs and start playing them. Joins your voice channel automatically.</div><div class="cmd-footer"><span class="cmd-usage">-liked play</span></div></div></div>
+          <div class="cmd-card" data-cat="liked"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>liked clear</div><div class="cmd-desc">Permanently clear all your liked songs.</div><div class="cmd-footer"><span class="cmd-usage">-liked clear</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ DJ SYSTEM ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-dj">
+      <div class="cat-icon" style="background:rgba(255,112,67,0.1);border-color:rgba(255,112,67,0.3);color:#ff7043;display:none;">⚡</div>
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(255,112,67,0.1);border-color:rgba(255,112,67,0.3);color:#ff7043;">⚡</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">DJ System</div>
+          <div class="cat-desc">Full DJ role and permission system — restrict commands per-server, per-user, or server-wide</div>
+          <div class="cat-count">8 commands · Manage Server required</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">DJ Commands</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="dj"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>djsetup</div><div class="cmd-aliases">aliases: djs</div><div class="cmd-desc">Enable DJ mode and set the DJ role. When enabled, all music commands require the DJ role (admins bypass).</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-djsetup @role  |  -djsetup toggle</span></div></div></div>
+          <div class="cmd-card" data-cat="dj"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>djinfo</div><div class="cmd-aliases">aliases: dji</div><div class="cmd-desc">Show all current DJ settings: DJ role, DJ mode status, and list of restricted commands.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-djinfo</span></div></div></div>
+          <div class="cmd-card" data-cat="dj"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>djreset</div><div class="cmd-desc">Reset all DJ settings to default — clears DJ role, disables DJ mode, removes all restrictions.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-djreset</span></div></div></div>
+          <div class="cmd-card" data-cat="dj"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>djrestrict</div><div class="cmd-aliases">aliases: restrictcommand</div><div class="cmd-desc">Toggle any individual command to be DJ-only, regardless of the global DJ mode setting.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-djrestrict &lt;command name&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="dj"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>settings djrole</div><div class="cmd-desc">Set or clear the DJ role directly via settings. Members with this role can use DJ-restricted commands.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-settings djrole @role  |  -settings djrole clear</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ CONFIGURATION ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-config">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(128,203,196,0.1);border-color:rgba(128,203,196,0.3);color:#80cbc4;">⚙</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">Configuration</div>
+          <div class="cat-desc">Server-wide music bot settings — prefix, announcements, buttons, 24/7 mode</div>
+          <div class="cat-count">11 commands</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Server Settings</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="config"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>settings</div><div class="cmd-aliases">aliases: config, set</div><div class="cmd-desc">View all current server settings: DJ role, volume, loop, 24/7 mode, announcements, buttons.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-settings</span></div></div></div>
+          <div class="cmd-card" data-cat="config"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>setprefix</div><div class="cmd-desc">Change the bot's command prefix for this server (max 5 characters). Default is <code>-</code>.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-setprefix !</span></div></div></div>
+          <div class="cmd-card" data-cat="config"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>announce</div><div class="cmd-desc">Toggle track start announcements — the "Now Playing" embed that appears when a new track begins.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-announce</span></div></div></div>
+          <div class="cmd-card" data-cat="config"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>buttons</div><div class="cmd-desc">Toggle the control buttons (⏸ ▶▶ ⏹ ↻) that appear on the Now Playing embed.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-buttons</span></div></div></div>
+          <div class="cmd-card" data-cat="config"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>settings volume</div><div class="cmd-desc">Set the default playback volume for this server (0–200).</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-settings volume &lt;0–200&gt;</span></div></div></div>
+          <div class="cmd-card" data-cat="config"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>settings 247</div><div class="cmd-desc">Toggle 24/7 mode from settings — bot stays in voice channel permanently.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-settings 247</span></div></div></div>
+          <div class="cmd-card" data-cat="config"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>settings announce</div><div class="cmd-desc">Toggle track announcements from the settings panel.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-settings announce</span></div></div></div>
+          <div class="cmd-card" data-cat="config"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>settingsreset</div><div class="cmd-aliases">aliases: resetconfig</div><div class="cmd-desc">Reset all server settings to their defaults. This cannot be undone.</div><div class="cmd-footer"><span class="cmd-perm">Manage Server</span><span class="cmd-usage">-settingsreset</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ UTILITY ═══════════════════════════════ -->
+    <div class="section-divider"></div>
+    <section class="cat-section" id="cat-utility">
+      <div class="cat-header">
+        <div class="cat-icon" style="background:rgba(165,214,167,0.1);border-color:rgba(165,214,167,0.3);color:#a5d6a7;">⊕</div>
+        <div class="cat-title-wrap">
+          <div class="cat-title">Utility</div>
+          <div class="cat-desc">Bot information, latency, statistics, and general utility commands</div>
+          <div class="cat-count">6 commands</div>
+        </div>
+      </div>
+      <div class="sub-section">
+        <div class="sub-label">Bot Utilities</div>
+        <div class="cmd-grid">
+          <div class="cmd-card" data-cat="utility"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>ping</div><div class="cmd-desc">Check bot roundtrip latency, WebSocket ping, and Lavalink node status for all 6 nodes.</div><div class="cmd-footer"><span class="cmd-usage">-ping</span></div></div></div>
+          <div class="cmd-card" data-cat="utility"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>stats</div><div class="cmd-desc">Show bot statistics: server count, active players, uptime, memory usage, and Lavalink node health.</div><div class="cmd-footer"><span class="cmd-usage">-stats</span></div></div></div>
+          <div class="cmd-card" data-cat="utility"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>invite</div><div class="cmd-desc">Get the invite link to add Smooth Operator to another server.</div><div class="cmd-footer"><span class="cmd-usage">-invite</span></div></div></div>
+          <div class="cmd-card" data-cat="utility"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>help</div><div class="cmd-aliases">aliases: h, commands</div><div class="cmd-desc">Show all commands grouped by category, or get detailed info about a specific command including usage and aliases.</div><div class="cmd-footer"><span class="cmd-usage">-help  |  -help play</span></div></div></div>
+          <div class="cmd-card" data-cat="utility"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>history</div><div class="cmd-aliases">aliases: recent</div><div class="cmd-desc">View this server's play history — recently played tracks with timestamps. Paginated.</div><div class="cmd-footer"><span class="cmd-usage">-history [page]</span></div></div></div>
+          <div class="cmd-card" data-cat="utility"><div class="cc-bar"></div><div class="cc-body"><div class="cmd-name"><span class="pfx">-</span>voicechannelstatus</div><div class="cmd-aliases">aliases: vcstatus</div><div class="cmd-desc">Toggle auto-updating the voice channel name to display the currently playing track. DJ only.</div><div class="cmd-footer"><span class="cmd-perm">DJ</span><span class="cmd-usage">-vcstatus</span></div></div></div>
+        </div>
+      </div>
+    </section>
+
+    </div><!-- /all-sections -->
+  </main>
+</div>
+
+<script>
+// Cursor
+const dot = document.getElementById('cur-dot');
+const ring = document.getElementById('cur-ring');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; dot.style.transform=`translate(${mx}px,${my}px)`; });
+(function loop(){ rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12; ring.style.transform=`translate(${rx}px,${ry}px)`; requestAnimationFrame(loop); })();
+
+// Sidebar active
+function setActive(el) {
+  document.querySelectorAll('.sb-link').forEach(l => l.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// Count total commands
+const cards = document.querySelectorAll('.cmd-card');
+document.getElementById('total-count').textContent = cards.length;
+
+// Search
+const input = document.getElementById('search-input');
+const noResults = document.getElementById('no-results');
+const allSections = document.getElementById('all-sections');
+const overviewGrid = document.getElementById('overview-grid');
+
+input.addEventListener('input', function() {
+  const q = this.value.toLowerCase().trim();
+  if (!q) {
+    cards.forEach(c => c.style.display = '');
+    document.querySelectorAll('.sub-section,.cat-section,.section-divider,.sub-label').forEach(el => el.style.display = '');
+    overviewGrid.style.display = '';
+    noResults.style.display = 'none';
+    allSections.style.display = '';
+    return;
+  }
+  overviewGrid.style.display = 'none';
+  allSections.style.display = '';
+  let found = 0;
+  cards.forEach(c => {
+    const text = c.textContent.toLowerCase();
+    const show = text.includes(q);
+    c.style.display = show ? '' : 'none';
+    if (show) found++;
+  });
+  // Show/hide sub-sections and cat-sections based on visible cards
+  document.querySelectorAll('.sub-section').forEach(ss => {
+    const visible = ss.querySelectorAll('.cmd-card:not([style*="none"])').length;
+    ss.style.display = visible ? '' : 'none';
+  });
+  document.querySelectorAll('.cat-section').forEach(cs => {
+    const visible = cs.querySelectorAll('.cmd-card:not([style*="none"])').length;
+    cs.style.display = visible ? '' : 'none';
+  });
+  document.querySelectorAll('.section-divider').forEach(d => {
+    // Find adjacent section
+    const next = d.nextElementSibling;
+    d.style.display = (next && next.style.display !== 'none') ? '' : 'none';
+  });
+  noResults.style.display = found === 0 ? 'block' : 'none';
+});
+
+// Highlight active sidebar link on scroll
+const sections = document.querySelectorAll('.cat-section');
+const sbLinks = document.querySelectorAll('.sb-link[href^="#cat-"]');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      const id = e.target.id;
+      sbLinks.forEach(l => {
+        l.classList.toggle('active', l.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { threshold: 0.3 });
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
