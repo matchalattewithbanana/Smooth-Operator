@@ -1,0 +1,2017 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="theme-color" content="#f5f2e8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Smooth Operator — Command Reference</title>
+<link rel="dns-prefetch" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="dns-prefetch" href="https://fonts.gstatic.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Uncut Sans from UNCUT.wtf — via fontsource CDN (free, OFL) -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/uncut-sans@5/index.css">
+<!-- Clash Display from Fontshare -->
+<link href="https://api.fontshare.com/v2/css?f[]=clash-display@400,500,600,700&display=swap" rel="stylesheet">
+<!-- Space Mono for code -->
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&display=swap&font-display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/animejs@4.3.6/dist/bundles/anime.umd.min.js"></script>
+<style>
+/* ── LIGHT MODE — Design Toolkit cream ────────────── */
+:root,[data-theme="light"] {
+  --bg:    #f5f2e8;
+  --bg1:   #eeebd9;
+  --bg2:   #e6e3d0;
+  --bg3:   #dedad8;
+  --ink:   #000000;
+  --ink2:  #1a1a1a;
+  --txm:   #5a5a52;
+  --txd:   #9a9a8a;
+  --bdr:   rgba(0,0,0,0.10);
+  --bdr2:  rgba(0,0,0,0.22);
+  --accdim:rgba(0,0,0,0.07);
+  --g:     #1a1a1a;
+  --g2:    #000000;
+  --gdim:  rgba(0,0,0,0.07);
+  --tx:    #1a1a1a;
+  --fd: 'Clash Display', 'Uncut Sans', sans-serif;
+  --fb: 'Uncut Sans', system-ui, sans-serif;
+  --fm: 'Space Mono', monospace;
+  --c-play:    #000;    --c-search: #1a4480;
+  --c-queue:   #4a1f8a; --c-ctrl:   #0e5454;
+  --c-filter:  #8a3a00; --c-playlist:#7a5000;
+  --c-liked:   #8a1060; --c-dj:     #8a1010;
+  --c-config:  #3a1a7a; --c-utility:#0e5a30;
+}
+/* ── DARK MODE — Godly-inspired refined dark ─────── */
+[data-theme="dark"] {
+  --bg:    #0d0d0d;
+  --tag-bg:rgba(255,255,255,0.07);
+  --bg1:   #131313;
+  --bg2:   #1a1a1a;
+  --bg3:   #222222;
+  --ink:   #ffffff;
+  --ink2:  #ececec;
+  --txm:   #909090;
+  --txd:   #565656;
+  --bdr:   rgba(255,255,255,0.08);
+  --bdr2:  rgba(255,255,255,0.18);
+  --accdim:rgba(255,255,255,0.06);
+  --g:     #ececec;
+  --g2:    #ffffff;
+  --gdim:  rgba(255,255,255,0.06);
+  --tx:    #ececec;
+  --c-play:#fff;    --c-search:#5b9bd5;
+  --c-queue:#9b6fd5; --c-ctrl:#4ecdc4;
+  --c-filter:#f0a060; --c-playlist:#d4a040;
+  --c-liked:#f06090; --c-dj:#f06060;
+  --c-config:#9070e0; --c-utility:#50c080;
+}
+/* honour OS preference when no explicit theme set */
+@media(prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0d0d0d;
+    --tag-bg:rgba(255,255,255,.07); --bg1:#131313; --bg2:#1a1a1a; --bg3:#222;
+    --ink:#fff; --ink2:#ececec; --txm:#909090; --txd:#565656;
+    --bdr:rgba(255,255,255,.08); --bdr2:rgba(255,255,255,.18);
+    --accdim:rgba(255,255,255,.06);
+    --g:#ececec; --g2:#fff; --gdim:rgba(255,255,255,.06); --tx:#ececec;
+    --c-play:#fff; --c-search:#5b9bd5; --c-queue:#9b6fd5;
+    --c-ctrl:#4ecdc4; --c-filter:#f0a060; --c-playlist:#d4a040;
+    --c-liked:#f06090; --c-dj:#f06060; --c-config:#9070e0; --c-utility:#50c080;
+  }
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{font-size:16px;}
+body{background:var(--bg);color:var(--tx);font-family:var(--fb);font-weight:400;line-height:1.6;overflow-x:hidden;cursor:none;}
+::selection{background:var(--ink);color:var(--bg);}
+a{color:inherit;text-decoration:none;}
+code{font-family:var(--fm);font-size:.83em;background:var(--bg3);padding:1px 6px;border-radius:2px;color:var(--ink);border:1px solid var(--bdr);}
+body::before{content:'';position:fixed;inset:0;z-index:9997;pointer-events:none;opacity:.02;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");background-size:180px;}
+
+/* cursor */
+#cd,#cr{position:fixed;top:0;left:0;pointer-events:none;z-index:10000;will-change:transform;}
+#cd{width:5px;height:5px;background:var(--ink);border-radius:50%;margin:-2.5px 0 0 -2.5px;}
+#cr{width:24px;height:24px;border:1.5px solid var(--bdr2);border-radius:50%;margin:-12px 0 0 -12px;transition:transform .11s cubic-bezier(.16,1,.3,1);}
+
+/* ── LAYOUT ── */
+.app{display:grid;grid-template-columns:220px 1fr;height:100vh;overflow:hidden;}
+
+/* ── SIDEBAR ── */
+.sb{background:var(--bg1);border-right:1px solid var(--bdr);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto;scrollbar-width:thin;scrollbar-color:rgba(0,0,0,.18) transparent;}
+.sb-logo{padding:20px 16px 14px;border-bottom:1px solid var(--bdr);}
+.sb-name{font-family:var(--fd);font-size:15px;font-weight:900;letter-spacing:-.03em;color:var(--ink);}
+.sb-tag{font-size:8.5px;color:var(--txd);font-family:var(--fm);margin-top:2px;letter-spacing:.1em;text-transform:uppercase;}
+.sb-qi{padding:8px 10px;border-bottom:1px solid var(--bdr);}
+.sb-qi input{width:100%;background:var(--bg2);border:1px solid var(--bdr);border-radius:5px;padding:5px 9px;font-family:var(--fb);font-size:11.5px;color:var(--tx);outline:none;transition:border-color .2s;}
+.sb-qi input:focus{border-color:var(--g);}
+.sb-qi input::placeholder{color:var(--txd);}
+.sb-nav{padding:5px 0;flex:1;}
+.sb-sec{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--txd);padding:9px 16px 2px;}
+.sb-a{display:flex;align-items:center;gap:7px;padding:6px 16px;font-size:12px;color:var(--txm);cursor:none;transition:background .12s,color .12s;border-left:2px solid transparent;}
+.sb-a:hover,.sb-a.on{background:var(--gdim);color:var(--g2);}
+.sb-a.on{border-left-color:var(--ink);font-weight:700;}
+.sb-a .i{font-size:11px;width:14px;text-align:center;flex-shrink:0;}
+.sb-n{margin-left:auto;font-family:var(--fm);font-size:8px;color:var(--txd);background:var(--bg3);padding:1px 4px;border-radius:3px;flex-shrink:0;}
+.sb-hr{height:1px;background:var(--bdr);margin:4px 12px;}
+.sb-foot{padding:11px 16px;border-top:1px solid var(--bdr);font-size:9.5px;color:var(--txd);line-height:1.7;}
+.sb-foot strong{color:var(--g);}
+
+/* ── MAIN ── */
+.main{display:flex;flex-direction:column;min-height:100vh;}
+
+/* ── TAB BAR ── */
+.tabbar{display:flex;align-items:center;gap:2px;padding:0 32px;background:var(--bg1);border-bottom:1.5px solid var(--bdr);position:sticky;top:0;z-index:50;overflow-x:auto;scrollbar-width:none;}
+.tabbar::-webkit-scrollbar{display:none;}
+.tab{display:flex;align-items:center;gap:6px;padding:13px 16px;font-size:11.5px;color:var(--txm);cursor:none;border-bottom:2px solid transparent;white-space:nowrap;transition:color .15s,border-color .15s;font-weight:400;will-change:transform;}
+.tab:hover{color:var(--tx);}
+.tab.on{color:var(--ink);border-bottom-color:var(--ink);font-weight:700;}
+.tab-ico{font-size:12px;}
+
+/* ── PAGES ── */
+.page{display:none;flex:1;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain;touch-action:pan-y;scroll-behavior:smooth;}
+.page.on{display:flex;flex-direction:column;}
+
+/* ── HERO (home page) ── */
+.hero{padding:56px 48px 48px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:420px;height:420px;background:radial-gradient(ellipse,rgba(200,175,100,.2) 0%,transparent 70%);pointer-events:none;transition:none;}
+.hero::after{content:'';position:absolute;bottom:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(0,0,0,.15),transparent);}
+.hero-eye{font-family:var(--fm);font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--txd);margin-bottom:14px;display:flex;align-items:center;gap:9px;}
+.hero-eye::before{content:'';width:24px;height:1px;background:var(--txd);}
+.hero-h{font-family:var(--fd);font-size:clamp(42px,6vw,74px);font-weight:900;letter-spacing:-.04em;line-height:.97;margin-bottom:12px;}
+.hero-h em{color:var(--ink);font-style:italic;}
+.hero-sub{font-size:13px;color:var(--txm);max-width:500px;line-height:1.8;margin-bottom:24px;}
+.pills{display:flex;flex-wrap:wrap;gap:6px;}
+.pill{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:2px;font-size:8.5px;font-weight:700;border:1.5px solid;font-family:var(--fm);will-change:transform;letter-spacing:.08em;text-transform:uppercase;}
+.pg{color:var(--ink);border-color:var(--bdr2);background:var(--accdim)}
+.pb{color:var(--ink);border-color:var(--bdr2);background:var(--accdim)}
+.pp{color:var(--ink);border-color:var(--bdr2);background:var(--accdim)}
+.po{color:var(--ink);border-color:var(--bdr2);background:var(--accdim)}
+.pt{color:var(--ink);border-color:var(--bdr2);background:var(--accdim)}
+.pk{color:var(--ink);border-color:var(--bdr2);background:var(--accdim)}
+
+/* overview cards */
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(185px,1fr));gap:8px;padding:8px 48px 48px;}
+.ov-c{background:var(--bg1);border:1px solid var(--bdr);border-radius:8px;padding:15px;cursor:none;transition:border-color .15s;will-change:transform;display:block;}
+.ov-c:hover{border-color:var(--bdr2);}
+.ov-ico{font-size:22px;margin-bottom:8px;}
+.ov-name{font-family:var(--fd);font-size:12.5px;font-weight:800;margin-bottom:2px;letter-spacing:-.01em;}
+.ov-cnt{font-family:var(--fm);font-size:8.5px;color:var(--txm);margin-bottom:4px;}
+.ov-desc{font-size:9.5px;color:var(--txd);line-height:1.5;}
+
+/* ── COMMAND PAGES ── */
+.pg-inner{padding:32px 48px 72px;}
+.pg-hdr{display:flex;align-items:flex-start;gap:12px;margin-bottom:24px;padding-bottom:20px;border-bottom:1px solid var(--bdr);}
+.pg-ico{width:38px;height:38px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;border:1px solid;}
+.pg-title{font-family:var(--fd);font-size:20px;font-weight:900;letter-spacing:-.03em;color:var(--ink);}
+.pg-desc{font-size:11px;color:var(--txm);margin-top:3px;max-width:480px;line-height:1.6;}
+.pg-count{font-family:var(--fd);font-size:10px;color:var(--txd);margin-top:4px;font-weight:700;letter-spacing:.05em;}
+
+.sub{margin-bottom:24px;}
+.sub-lbl{font-size:8px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--txm);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:6px;}
+.sub-lbl::before{content:'';width:16px;height:1.5px;background:var(--ink);opacity:1;}
+
+/* .grid — see compat block below */
+.card{background:var(--bg1);border:1px solid var(--bdr);border-radius:6px;overflow:hidden;cursor:none;transition:border-color .15s;will-change:transform;}
+.card:hover{border-color:var(--bdr2);}
+.card:hover .cn{color:var(--g2);}
+.bar{height:2px;}
+.body{padding:9px 11px 11px;}
+.cn{font-family:var(--fm);font-size:10.5px;font-weight:700;color:var(--tx);margin-bottom:2px;transition:color .15s;}
+.cn .pfx{color:var(--g2);}
+.ca{font-family:var(--fm);font-size:8.5px;color:var(--txd);margin-bottom:3px;}
+.cd{font-size:10px;color:var(--txm);line-height:1.65;margin-bottom:6px;}
+.cf{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.tag{font-size:8px;font-family:var(--fm);padding:1px 5px;border-radius:3px;border:1px solid;}
+.tg{color:#7d5a00;border-color:rgba(180,130,0,.25);background:rgba(180,130,0,.08)}
+.td{color:#7a3000;border-color:rgba(180,70,0,.22);background:rgba(180,70,0,.07)}
+.tv{color:#003580;border-color:rgba(0,60,160,.20);background:rgba(0,60,160,.07)}
+.ts{color:#006060;border-color:rgba(0,100,100,.20);background:rgba(0,100,100,.07)}
+.cu{font-size:8px;font-family:var(--fm);padding:1px 5px;border-radius:3px;border:1px solid var(--bdr);color:var(--txm);background:var(--bg2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:100%;}
+
+/* bar colours */
+.card[data-c="play"] .bar{background:var(--c-play)}
+.card[data-c="search"] .bar{background:var(--c-search)}
+.card[data-c="queue"] .bar{background:var(--c-queue)}
+.card[data-c="controls"] .bar{background:var(--c-ctrl)}
+.card[data-c="filter"] .bar{background:var(--c-filter)}
+.card[data-c="playlist"] .bar{background:var(--c-playlist)}
+.card[data-c="liked"] .bar{background:var(--c-liked)}
+.card[data-c="dj"] .bar{background:var(--c-dj)}
+.card[data-c="config"] .bar{background:var(--c-config)}
+.card[data-c="utility"] .bar{background:var(--c-utility)}
+
+/* info box */
+.info{background:var(--bg2);border:1px solid var(--bdr);border-left:3px solid var(--ink);border-radius:5px;padding:12px 14px;margin-bottom:16px;font-size:11px;color:var(--txm);line-height:1.75;}
+.info strong{color:var(--g2);font-weight:600;}
+
+/* source cards */
+.src-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:5px;margin-bottom:16px;}
+.src-c{background:var(--bg2);border:1px solid var(--bdr);border-radius:5px;padding:8px 10px;display:flex;align-items:center;gap:7px;}
+.src-ico{font-size:14px;width:16px;text-align:center;flex-shrink:0;}
+.src-nm{font-size:10px;font-weight:700;}
+.src-kw{font-family:var(--fm);font-size:8px;color:var(--txd);}
+
+/* ── AUTOPLAY PAGE ── */
+.sig-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:7px;margin-bottom:20px;}
+.sig{background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.1);border-radius:0;padding:13px 15px;border-left:3px solid var(--ink);}
+.sig-t{font-family:var(--fd);font-size:10px;font-weight:800;color:#000;margin-bottom:5px;letter-spacing:-.01em;}
+.sig-d{font-size:10px;color:var(--txm);line-height:1.65;}
+
+/* ── CHANGELOG PAGE ── */
+.cl-wrap{display:flex;flex-direction:column;gap:32px;}
+.cl-ver{background:var(--bg1);border:1px solid var(--bdr);border-radius:8px;overflow:hidden;}
+.cl-ver-hdr{padding:14px 18px;border-bottom:1px solid var(--bdr);display:flex;align-items:center;gap:10px;background:var(--bg2);}
+.cl-ver-num{font-family:var(--fd);font-size:14px;font-weight:900;color:var(--ink);letter-spacing:-.02em;}
+.cl-ver-name{font-size:11px;color:var(--txm);}
+.cl-ver-date{margin-left:auto;font-family:var(--fm);font-size:9px;color:var(--txd);}
+.cl-items{padding:14px 18px;display:flex;flex-direction:column;gap:10px;}
+.cl-item{display:flex;align-items:flex-start;gap:10px;}
+.cl-bullet{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.cl-text{}
+.cl-it{font-size:11px;font-weight:500;color:var(--tx);margin-bottom:1px;}
+.cl-id{font-size:10px;color:var(--txm);line-height:1.6;}
+.cl-tag{display:inline-block;font-size:7.5px;font-family:var(--fm);padding:1px 5px;border-radius:3px;border:1px solid;letter-spacing:.04em;text-transform:uppercase;margin-bottom:3px;vertical-align:middle;}
+.cl-tag.a{color:#276749;border-color:rgba(39,103,73,.25);background:rgba(39,103,73,.06)}
+.cl-tag.f{color:#c53030;border-color:rgba(197,48,48,.25);background:rgba(197,48,48,.06)}
+.cl-tag.i{color:#2b6cb0;border-color:rgba(43,108,176,.25);background:rgba(43,108,176,.06)}
+.cl-tag.r{color:#c05621;border-color:rgba(192,86,33,.25);background:rgba(192,86,33,.06)}
+
+/* back button */
+#back-btn{background:none;border:none;color:var(--txm);font-size:16px;padding:0 12px 0 4px;cursor:none;transition:color .15s,opacity .15s;flex-shrink:0;line-height:1;border-right:1px solid var(--bdr);margin-right:4px;height:100%;display:flex;align-items:center;}
+#back-btn:hover{color:var(--g2);}
+
+/* search highlight */
+.card.hidden{display:none;}
+#no-r{display:none;padding:48px;color:var(--txm);font-size:13px;text-align:center;}
+
+
+
+
+/* ── THEME TRANSITION ──────────────────────────────── */
+
+/* ── Targeted theme transition (not * — too slow) ── */
+body,
+.sb, .main, .hero, .tabbar, #bottom-nav,
+.mg-card, .mg-grid, .card, .ov-c, .info,
+.pg-hdr, .sig, .cl-ver, .src-c, .tf-btn,
+.sb-a, .tab, #toast, code {
+  transition: background-color .22s ease, border-color .18s ease,
+              color .18s ease, box-shadow .18s ease;
+}
+/* but keep transform/opacity instant for anime.js */
+.card,.ov-c,.pill,.tab,.bnav-btn,.sb-a,.mg-card {
+  transition-property: background-color, border-color, color, box-shadow;
+}
+
+/* but NOT transforms/opacity (breaks animations) */
+.card,.ov-c,.pill,.tab,.bnav-btn,.sb-a{
+  transition:border-color .2s ease,background-color .2s ease,box-shadow .2s ease;
+}
+
+
+/* ── Compat: old .grid/.card still renders cleanly ── */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1px;
+  background:var(--bdr);
+  border:1px solid var(--bdr);
+}
+.card{
+  background:var(--bg);
+  border:none;
+  border-radius:0;
+  box-shadow:none;
+  transition:background .15s;
+}
+.card:hover{
+  background:var(--bg2);
+  transform:none !important;
+}
+.card .bar{height:2px;}
+.card .body{padding:18px 20px 18px;}
+.card .cn{font-family:var(--fd);font-size:14px;font-weight:700;letter-spacing:-.02em;color:var(--tx);}
+.card .ca{font-family:var(--fm);font-size:8.5px;color:var(--txd);letter-spacing:.04em;margin-bottom:6px;}
+.card .cd{font-size:11.5px;color:var(--txm);line-height:1.65;margin-bottom:10px;}
+.card .cf{display:flex;gap:4px;flex-wrap:wrap;}
+.card .cu{font-family:var(--fm);font-size:8.5px;border:1px solid var(--bdr);padding:2px 7px;border-radius:2px;color:var(--txd);}
+.card .tag{font-family:var(--fm);font-size:8px;padding:2px 6px;border:1px solid var(--bdr);border-radius:2px;}
+
+
+/* ══════════════════════════════════════════════════════════
+   JULY.FUND INSPIRED — forest green dark, editorial cream,
+   pure typographic restraint, zero decoration
+   ══════════════════════════════════════════════════════════ */
+
+/* Deep forest hero glow in dark mode */
+[data-theme="dark"] .hero::before,
+:root:not([data-theme="light"]) .hero::before {
+  background: radial-gradient(ellipse, rgba(100,180,100,.08) 0%, transparent 70%);
+}
+
+/* Gold accent for dark mode — july.fund signature */
+[data-theme="dark"] .hero-h em,
+:root:not([data-theme="light"]) .hero-h em {
+  color: var(--acc-gold, #c8a84b);
+}
+
+/* july.fund style: hero subtitle as small caps */
+[data-theme="dark"] .hero-eye,
+:root:not([data-theme="light"]) .hero-eye {
+  color: var(--txm);
+  letter-spacing: .2em;
+}
+
+/* Dark mode sidebar: forest green panel */
+[data-theme="dark"] .sb,
+:root:not([data-theme="light"]) .sb {
+  border-right-color: rgba(120,180,130,.15);
+}
+
+/* Dark mode info box: green left border */
+[data-theme="dark"] .info,
+:root:not([data-theme="light"]) .info {
+  border-left-color: var(--txm);
+  background: rgba(255,255,255,.02);
+}
+
+/* Dark mode: mg-card hover — very subtle green tint */
+[data-theme="dark"] .mg-card:hover,
+:root:not([data-theme="light"]) .mg-card:hover {
+  background: rgba(120,180,130,.05);
+}
+
+/* Dark mode: tag filter active */
+[data-theme="dark"] .tf-btn.active,
+:root:not([data-theme="light"]) .tf-btn.active {
+  background: var(--ink);
+  color: var(--bg);
+  border-color: var(--ink);
+}
+
+/* july.fund: huge display number on hero — editorial stat */
+.hero-stat {
+  font-family: var(--fd);
+  font-size: clamp(64px, 12vw, 120px);
+  font-weight: 700;
+  letter-spacing: -.05em;
+  line-height: .9;
+  color: var(--ink);
+  display: block;
+  margin-bottom: 4px;
+}
+.hero-stat-label {
+  font-family: var(--fm);
+  font-size: 9px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--txd);
+}
+
+/* july.fund: thin horizontal rule with label */
+.section-rule {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 32px 0 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--bdr);
+}
+.section-rule-label {
+  font-family: var(--fm);
+  font-size: 8px;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--txd);
+  white-space: nowrap;
+}
+
+/* Dark mode: toast in forest green */
+[data-theme="dark"] #toast,
+:root:not([data-theme="light"]) #toast {
+  background: var(--ink);
+  color: var(--bg);
+}
+
+/* ══════════════════════════════════════════════════════════
+   MINIMAL GALLERY INSPIRED — clean grid, hover-reveal,
+   no decoration, generous space, 1px borders only
+   DESIGN SPELLS INSPIRED — tactile interactions, magic moments
+   ══════════════════════════════════════════════════════════ */
+
+
+.hero-stats-row{
+  display:flex;gap:36px;flex-wrap:wrap;
+  margin-top:32px;padding-top:24px;
+  border-top:1px solid var(--bdr);
+}
+@media(max-width:480px){
+  .hero-stats-row{gap:20px;margin-top:20px;padding-top:18px;}
+}
+/* ── Tag filter bar (Minimal Gallery style) ──────────────── */
+.tag-filter{
+  display:flex;gap:6px;flex-wrap:wrap;
+  padding:0 0 20px;
+  border-bottom:1px solid var(--bdr);
+  margin-bottom:22px;
+}
+.tf-btn{
+  padding:4px 12px;border:1px solid var(--bdr);
+  border-radius:2px;font-family:var(--fm);font-size:9px;
+  font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  cursor:pointer;background:transparent;color:var(--txm);
+  transition:all .15s;-webkit-tap-highlight-color:transparent;
+}
+.tf-btn:hover{border-color:var(--bdr2);color:var(--tx);}
+.tf-btn.active{background:var(--ink);color:var(--bg);border-color:var(--ink);}
+
+/* ── Minimal Gallery grid — 2-col on mobile, 3 on wide ───── */
+.mg-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:1px;
+  background:var(--bdr);
+  border:1px solid var(--bdr);
+}
+.mg-card{
+  background:var(--bg);
+  padding:20px;
+  position:relative;
+  overflow:hidden;
+  cursor:pointer;
+  transition:background .15s;
+  display:flex;flex-direction:column;gap:8px;
+  min-height:110px;
+}
+.mg-card:hover{background:var(--bg2);}
+.mg-card .mg-cat-bar{
+  width:20px;height:2px;border-radius:0;
+  margin-bottom:4px;
+  transition:width .25s cubic-bezier(.16,1,.3,1);
+}
+.mg-card:hover .mg-cat-bar{width:40px;}
+.mg-card .mg-name{
+  font-family:var(--fd);font-size:14px;font-weight:700;
+  letter-spacing:-.02em;color:var(--tx);line-height:1.2;
+}
+.mg-card .mg-alias{
+  font-family:var(--fm);font-size:8.5px;color:var(--txd);
+  letter-spacing:.04em;
+}
+.mg-card .mg-desc{
+  font-size:11px;color:var(--txm);line-height:1.6;
+  margin-top:2px;
+}
+.mg-card .mg-tags{
+  display:flex;gap:4px;flex-wrap:wrap;margin-top:auto;padding-top:8px;
+}
+.mg-card .mg-tag{
+  font-size:8px;font-family:var(--fm);padding:2px 6px;
+  border:1px solid var(--bdr);border-radius:2px;
+  color:var(--txd);letter-spacing:.04em;text-transform:uppercase;
+}
+/* hidden cards when filtered */
+.mg-card.filtered{display:none;}
+
+/* ── Reveal animation (Design Spells magic entrance) ──────── */
+@keyframes cardReveal{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.mg-card{animation:cardReveal .3s ease both;}
+
+/* ── Toast notification (Design Spells — tactile feedback) ── */
+#toast{
+  position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);
+  background:var(--ink);color:var(--bg);
+  font-family:var(--fm);font-size:10px;letter-spacing:.06em;text-transform:uppercase;
+  padding:8px 16px;border-radius:3px;
+  opacity:0;pointer-events:none;z-index:9999;
+  transition:all .25s cubic-bezier(.16,1,.3,1);
+  white-space:nowrap;
+}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+@media(min-width:769px){#toast{bottom:24px;}}
+
+/* ── Confetti canvas (Design Spells confetti moment) ─────── */
+#confetti-canvas{
+  position:fixed;inset:0;pointer-events:none;z-index:9998;
+}
+
+/* ── Command count badge ─────────────────────────────────── */
+.cmd-count-badge{
+  font-family:var(--fm);font-size:9px;color:var(--txd);
+  letter-spacing:.06em;padding:0 0 16px;display:block;
+  text-transform:uppercase;
+}
+
+/* ── Keyboard shortcut hint (Minimal Gallery does this) ─── */
+.kbd-hint{
+  display:none;
+  position:fixed;bottom:20px;right:20px;z-index:200;
+  background:var(--bg1);border:1px solid var(--bdr);
+  border-radius:4px;padding:8px 12px;
+  font-family:var(--fm);font-size:9px;color:var(--txm);
+  letter-spacing:.04em;
+}
+@media(hover:hover){.kbd-hint{display:flex;gap:8px;align-items:center;}}
+.kbd{background:var(--bg3);border:1px solid var(--bdr);border-radius:3px;
+  padding:1px 5px;font-size:9px;color:var(--txd);}
+
+/* ── Theme toggle — refined ─────────────────────────────── */
+#theme-btn{
+  background:none;border:1px solid var(--bdr);
+  border-radius:3px;padding:0 10px;height:30px;
+  font-size:12px;cursor:pointer;color:var(--txm);
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  font-family:var(--fm);letter-spacing:0;
+  margin-left:auto;margin-right:4px;flex-shrink:0;
+}
+#theme-btn:hover{border-color:var(--bdr2);color:var(--tx);}
+
+/* ── Search with Design Spells magic ───────────────────── */
+.sb-qi input:focus{
+  border-color:var(--ink);
+  box-shadow:0 0 0 2px var(--accdim);
+}
+
+/* ── Empty state ────────────────────────────────────────── */
+.empty-state{
+  text-align:center;padding:60px 20px;
+  font-family:var(--fm);font-size:11px;color:var(--txd);
+  letter-spacing:.06em;text-transform:uppercase;
+  display:none;
+}
+.empty-state.show{display:block;}
+
+/* ── Page header now has section number (toolkit .01_ style) */
+.pg-section-num{
+  font-family:var(--fd);font-size:40px;font-weight:700;
+  color:var(--bdr2);letter-spacing:-.04em;line-height:1;
+  margin-bottom:-8px;display:block;
+  user-select:none;
+}
+
+/* ── Hover line animation on nav links ──────────────────── */
+.sb-a{position:relative;}
+.sb-a::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;
+  height:0;background:var(--accdim);
+  transition:height .15s;pointer-events:none;
+}
+/* ── GPU COMPOSITING HINTS ───────────────────────────── */
+.card,.ov-c,.pill,.tab,.bnav-btn,.sb-a,.pg-hdr,.hero-h,.hero-sub{
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+.sb{
+  will-change:transform;
+  backface-visibility:hidden;
+  -webkit-backface-visibility:hidden;
+}
+/* Prevent iOS elastic scroll on fixed elements */
+#bottom-nav,#cur-dot,#cur-ring,#sb-overlay{
+  -webkit-transform:translateZ(0);
+  transform:translateZ(0);
+}
+/* Smooth scrolling in page containers */
+.pg-inner{
+  -webkit-overflow-scrolling:touch;
+}
+/* Prevent text size adjustment on mobile rotation */
+body{
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+}
+
+
+/* ── THEME TOGGLE ──────────────────────────────────── */
+#theme-btn{
+  margin-left:auto;margin-right:4px;flex-shrink:0;
+  background:none;border:1.5px solid var(--bdr2);
+  border-radius:4px;padding:0 10px;height:32px;
+  font-size:14px;cursor:none;color:var(--tx);
+  transition:background .15s,border-color .15s;
+  display:flex;align-items:center;justify-content:center;
+  -webkit-tap-highlight-color:transparent;
+  font-family:var(--fm);
+}
+#theme-btn:hover{background:var(--accdim);border-color:var(--bdr2);}
+#theme-btn:active{transform:scale(.94);}
+@media(max-width:768px){
+  #theme-btn{height:28px;padding:0 8px;font-size:13px;border-radius:3px;}
+}
+/* ── KEYBOARD FOCUS ──────────────────────────────────── */
+.tab:focus-visible,.sb-a:focus-visible,.bnav-btn:focus-visible,
+.card:focus-visible,.ov-c:focus-visible{
+  outline:2px solid #000;
+  outline-offset:2px;
+}
+button:focus{outline:none;}
+button:focus-visible{outline:2px solid #000;outline-offset:2px;}
+/* Remove outline on mouse click, keep for keyboard */
+*:focus:not(:focus-visible){outline:none;}
+/* ── TOUCH PERFORMANCE ────────────────────────────────── */
+.main,.page,.sb{-webkit-overflow-scrolling:touch;overscroll-behavior:contain;}
+.tabbar{touch-action:pan-x;overscroll-behavior-x:contain;}
+.card,.ov-c,.bnav-btn,.sb-a,.tab{-webkit-tap-highlight-color:transparent;}
+/* safe area for notched iPhones */
+@supports(padding:env(safe-area-inset-bottom)){
+  #bottom-nav{padding-bottom:env(safe-area-inset-bottom);}
+  @media(max-width:768px){.app{padding-bottom:calc(64px + env(safe-area-inset-bottom));}}
+}
+
+/* ── PAGE SCROLL HEIGHT ── */
+.page{height:calc(100vh - 44px);}
+.page.on{height:calc(100vh - 44px);}
+::-webkit-scrollbar{width:3px;}
+::-webkit-scrollbar-track{background:var(--bg1);}
+::-webkit-scrollbar-thumb{background:rgba(0,0,0,.2);border-radius:2px;}
+
+/* ── TABLET (≤1024px) ──────────────────────────────────── */
+@media(max-width:1024px){
+  .app{grid-template-columns:200px 1fr;}
+  .sb-name{font-size:14px;}
+  .hero{padding:44px 36px 38px;}
+  .ov-grid{padding:8px 36px 36px;}
+  .pg-inner{padding:28px 36px 64px;}
+  .tabbar{padding:0 20px;}
+  
+}
+
+/* ── MOBILE (≤768px) ──────────────────────────────────── */
+@media(max-width:768px){
+  /* disable custom cursor on touch */
+  body{cursor:auto;}
+  #cd,#cr{display:none;}
+
+  /* full-width layout — bottom nav takes 64px */
+  .app{grid-template-columns:1fr;padding-bottom:64px;}
+
+  /* sidebar — slides in as drawer from left */
+  .sb{
+    position:fixed;left:0;top:0;bottom:0;z-index:200;
+    transform:translateX(-100%);
+    transition:transform .26s cubic-bezier(.16,1,.3,1);
+    width:80vw;max-width:280px;min-width:0;
+    box-shadow:8px 0 40px rgba(0,0,0,.6);
+  }
+  .sb.open{transform:translateX(0);}
+
+  /* overlay behind drawer */
+  #sb-overlay{
+    display:none;position:fixed;inset:0;z-index:199;
+    background:rgba(0,0,0,.6);backdrop-filter:blur(3px);
+    -webkit-tap-highlight-color:transparent;
+  }
+  #sb-overlay.on{display:block;}
+
+  /* tab bar — icon only, no labels, fixed height */
+  .tabbar{padding:0;gap:0;height:48px;overflow-x:auto;}
+  .tab{
+    padding:0 11px;height:48px;font-size:0;/* hide label */
+    gap:0;flex-direction:column;align-items:center;justify-content:center;
+  }
+  .tab-ico{font-size:16px;line-height:1;}
+  .tab.on .tab-ico{transform:scale(1.15);}
+
+  /* hamburger */
+  #hamburger{
+    display:flex;align-items:center;justify-content:center;
+    width:48px;height:48px;min-width:48px;background:none;border:none;
+    color:var(--txm);font-size:20px;cursor:pointer;
+    flex-shrink:0;border-right:1px solid var(--bdr);
+    -webkit-tap-highlight-color:transparent;
+  }
+  #hamburger:active{color:var(--g2);}
+  #back-btn{
+    padding:0 12px;height:48px;font-size:20px;
+    -webkit-tap-highlight-color:transparent;
+  }
+
+  /* hero — compact */
+  .hero{padding:24px 16px 20px;}
+  .hero-eye{font-size:8px;margin-bottom:10px;}
+  .hero-h{font-size:clamp(30px,10vw,46px);}
+  .hero-sub{font-size:11.5px;line-height:1.7;margin-bottom:18px;}
+  .pills{gap:4px;}
+  .pill{font-size:8.5px;padding:3px 7px;}
+
+  /* overview — 2 cols, compact */
+  .ov-grid{
+    grid-template-columns:repeat(2,1fr);
+    gap:6px;padding:6px 12px 28px;
+  }
+  .ov-c{padding:11px;}
+  .ov-ico{font-size:15px;margin-bottom:4px;}
+  .ov-name{font-size:10.5px;}
+  .ov-cnt{font-size:8px;}
+  .ov-desc{display:none;}
+
+  /* page content */
+  .pg-inner{padding:16px 12px 80px;}
+  .page{height:calc(100vh - 48px - 60px - env(safe-area-inset-bottom, 0px));}
+  .app{height:100vh;}
+  /* mg-grid: single col on mobile */
+  .mg-grid{grid-template-columns:1fr;gap:1px;}
+  .mg-card{min-height:auto;padding:16px;}
+  .mg-card .mg-name{font-size:13px;}
+  .mg-card .mg-desc{font-size:10.5px;}
+  /* hero stats: wrap gracefully on small screens */
+  .hero-stat{font-size:clamp(40px,10vw,72px);}
+  /* tag filter: scroll horizontally on phone */
+  .tag-filter{flex-wrap:nowrap;overflow-x:auto;padding-bottom:10px;scrollbar-width:none;}
+  .tag-filter::-webkit-scrollbar{display:none;}
+  .tf-btn{flex-shrink:0;}
+  /* kbd hint: hide on mobile */
+  .kbd-hint{display:none !important;}
+
+  /* page header — compact */
+  .pg-hdr{gap:9px;margin-bottom:16px;padding-bottom:14px;}
+  .pg-ico{width:34px;height:34px;font-size:14px;flex-shrink:0;}
+  .pg-title{font-size:15px;}
+  .pg-desc{font-size:10px;max-width:none;}
+  .pg-count{font-size:8px;}
+
+  /* command grid — single column */
+
+
+  /* command cards — optimised for thumb tap */
+  .card{border-radius:9px;}
+  .bar{height:3px;}/* slightly thicker bar — easier to see */
+  .body{padding:11px 12px 12px;}
+  .cn{font-size:12px;margin-bottom:3px;}
+  .ca{font-size:9.5px;margin-bottom:4px;}
+  .cd{font-size:11px;line-height:1.65;margin-bottom:8px;}
+  .cf{gap:4px;flex-wrap:wrap;}
+  .tag{font-size:9px;padding:2px 6px;border-radius:4px;}
+  .cu{font-size:9px;padding:2px 7px;}
+
+  /* info box */
+  .info{font-size:11px;padding:10px 12px;line-height:1.7;}
+
+  /* source grid — 2 col */
+  .src-grid{grid-template-columns:repeat(2,1fr);gap:5px;}
+  .src-c{padding:8px 9px;}
+  .src-nm{font-size:10px;}
+  .src-kw{font-size:8px;}
+
+  /* autoplay signal grid */
+  .sig-grid{grid-template-columns:1fr;}
+  .sig{padding:10px 12px;}
+  .sig-t{font-size:9.5px;}
+  .sig-d{font-size:10px;}
+
+  /* sub label */
+  .sub-lbl{font-size:8px;margin-bottom:7px;}
+
+  /* sub spacing */
+  .sub{margin-bottom:20px;}
+
+  /* changelog */
+  .cl-wrap{gap:16px;}
+  .cl-ver-hdr{flex-wrap:wrap;gap:3px;padding:12px 14px;}
+  .cl-ver-num{font-size:11px;}
+  .cl-ver-name{font-size:10px;color:var(--txd);}
+  .cl-ver-date{margin-left:0;font-size:8.5px;width:100%;padding-top:1px;}
+  .cl-items{padding:10px 14px;gap:9px;}
+  .cl-item{gap:8px;}
+  .cl-bullet{width:6px;height:6px;margin-top:4px;}
+  .cl-it{font-size:11px;}
+  .cl-id{font-size:10px;line-height:1.6;}
+  .cl-tag{font-size:7px;padding:1px 4px;}
+
+  /* bottom nav */
+  #bottom-nav{
+    display:flex;position:fixed;bottom:0;left:0;right:0;z-index:150;
+    background:var(--bg1);border-top:1px solid var(--bdr);
+    height:60px;padding-bottom:env(safe-area-inset-bottom, 0px);
+  }
+  .bnav-btn{
+    flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:3px;background:none;border:none;color:var(--txm);
+    font-family:var(--fb);cursor:pointer;
+    -webkit-tap-highlight-color:transparent;
+    transition:color .12s;padding:0 2px;
+    min-width:0;
+  }
+  .bnav-btn.on{color:var(--ink);font-weight:700;}
+  .bnav-btn .bico{font-size:18px;line-height:1;}
+  .bnav-btn .bl{font-size:9px;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+  .bnav-btn:active{color:var(--g2);transform:scale(.93);}
+}
+
+/* ── VERY SMALL PHONES (≤380px) ─────────────────────────── */
+@media(max-width:380px){
+  .ov-grid{gap:5px;padding:5px 10px 24px;}
+  .pg-inner{padding:12px 10px 80px;}
+  .hero{padding:20px 12px 18px;}
+  .hero-h{font-size:clamp(28px,11vw,40px);}
+  .tab{padding:0 8px;}
+  .tab-ico{font-size:14px;}
+  #hamburger{width:42px;min-width:42px;}
+  .card .body{padding:10px 11px;}
+  .cn{font-size:11.5px;}
+  .hero-stat{font-size:clamp(36px,11vw,56px);}
+  div[style*="hero-stat"]{gap:24px !important;}
+  .mg-card .mg-name{font-size:12px;}
+}
+
+/* ── DESKTOP hover-only styles ─────────────────────────── */
+@media(hover:hover){
+  .card:hover{border-color:var(--bdr2);}
+  .ov-c:hover{border-color:var(--bdr2);}
+  .sb-a:hover{background:var(--gdim);color:var(--tx);}
+  .tab:hover{color:var(--tx);}
+}
+
+/* hide bottom nav and hamburger on desktop */
+#bottom-nav{display:none;}
+#hamburger{display:none;}
+#sb-overlay{display:none;}
+</style>
+</head>
+<body>
+<div id="cd"></div><div id="cr"></div>
+<div id="toast"></div>
+<canvas id="confetti-canvas"></canvas>
+<div class="kbd-hint">
+  <span><kbd class="kbd">K</kbd> search</span>
+  <span><kbd class="kbd">D</kbd> dark mode</span>
+  <span><kbd class="kbd">←→</kbd> tabs</span>
+</div>
+<div class="app">
+
+<!-- ── SIDEBAR ── -->
+<aside class="sb">
+  <div class="sb-logo">
+    <div class="sb-name">Smooth Operator</div>
+    <div class="sb-tag">Discord Music Bot · v1.0</div>
+  </div>
+  <div class="sb-qi"><input type="text" id="qi" placeholder="Search commands…" autocomplete="off" oninput="doSearch(this.value)"></div>
+  <nav class="sb-nav">
+    <div class="sb-sec">Pages</div>
+    <a class="sb-a on" href="#" onclick="showTab('home',this);return false;"><span class="i">◈</span>Home</a>
+    <div class="sb-hr"></div>
+    <div class="sb-sec">Music</div>
+    <a class="sb-a" href="#" onclick="showTab('play',this);return false;"><span class="i">♫</span>Playback<span class="sb-n">14</span></a>
+    <a class="sb-a" href="#" onclick="showTab('search',this);return false;"><span class="i">⌕</span>Search<span class="sb-n">3</span></a>
+    <a class="sb-a" href="#" onclick="showTab('queue',this);return false;"><span class="i">≡</span>Queue<span class="sb-n">11</span></a>
+    <a class="sb-a" href="#" onclick="showTab('controls',this);return false;"><span class="i">⏵</span>Controls<span class="sb-n">8</span></a>
+    <a class="sb-a" href="#" onclick="showTab('filter',this);return false;"><span class="i">◈</span>Filters<span class="sb-n">17</span></a>
+    <a class="sb-a" href="#" onclick="showTab('playlist',this);return false;"><span class="i">▤</span>Playlists<span class="sb-n">4</span></a>
+    <a class="sb-a" href="#" onclick="showTab('liked',this);return false;"><span class="i">♡</span>Liked Songs<span class="sb-n">5</span></a>
+    <div class="sb-hr"></div>
+    <div class="sb-sec">Server</div>
+    <a class="sb-a" href="#" onclick="showTab('dj',this);return false;"><span class="i">⚡</span>DJ System<span class="sb-n">4</span></a>
+    <a class="sb-a" href="#" onclick="showTab('config',this);return false;"><span class="i">⚙</span>Config<span class="sb-n">5</span></a>
+    <a class="sb-a" href="#" onclick="showTab('utility',this);return false;"><span class="i">⊕</span>Utility<span class="sb-n">4</span></a>
+    <div class="sb-hr"></div>
+    <div class="sb-sec">Reference</div>
+    <a class="sb-a" href="#" onclick="showTab('sources',this);return false;"><span class="i">◎</span>Sources</a>
+    <a class="sb-a" href="#" onclick="showTab('autoplay',this);return false;"><span class="i">∿</span>Autoplay Engine</a>
+    <a class="sb-a" href="#" onclick="showTab('changelog',this);return false;"><span class="i">◷</span>Changelog</a>
+  </nav>
+  <div class="sb-foot">
+    Prefix: <strong>-</strong> &nbsp;·&nbsp; Also <strong>/slash</strong><br>
+    Multi-platform · 6 Lavalink nodes<br>
+    AI autoplay · 24/7 · DJ system<br><br>
+    <button onclick="toggleTheme()" style="background:none;border:1px solid var(--bdr2);border-radius:3px;padding:4px 10px;font-family:var(--fm);font-size:9px;cursor:pointer;color:var(--tx);letter-spacing:.06em;text-transform:uppercase;width:100%;" id="sb-theme-btn">Toggle Theme</button>
+  </div>
+</aside>
+
+<!-- ── MAIN ── -->
+<div class="main">
+
+  <!-- TAB BAR -->
+  <div class="tabbar" id="tabbar">
+    <button id="hamburger" onclick="toggleSidebar()" aria-label="Menu">☰</button>
+    <button id="back-btn" onclick="goBack()" title="Go back" style="opacity:.25;pointer-events:none;">←</button>
+    <div class="tab on" data-tab="home"     onclick="showTab('home',null)"><span class="tab-ico">◈</span>Home</div>
+    <div class="tab"     data-tab="play"     onclick="showTab('play',null)"><span class="tab-ico">♫</span>Playback</div>
+    <div class="tab"     data-tab="search"   onclick="showTab('search',null)"><span class="tab-ico">⌕</span>Search</div>
+    <div class="tab"     data-tab="queue"    onclick="showTab('queue',null)"><span class="tab-ico">≡</span>Queue</div>
+    <div class="tab"     data-tab="controls" onclick="showTab('controls',null)"><span class="tab-ico">⏵</span>Controls</div>
+    <div class="tab"     data-tab="filter"   onclick="showTab('filter',null)"><span class="tab-ico">◈</span>Filters</div>
+    <div class="tab"     data-tab="playlist" onclick="showTab('playlist',null)"><span class="tab-ico">▤</span>Playlists</div>
+    <div class="tab"     data-tab="liked"    onclick="showTab('liked',null)"><span class="tab-ico">♡</span>Liked</div>
+    <div class="tab"     data-tab="dj"       onclick="showTab('dj',null)"><span class="tab-ico">⚡</span>DJ</div>
+    <div class="tab"     data-tab="config"   onclick="showTab('config',null)"><span class="tab-ico">⚙</span>Config</div>
+    <div class="tab"     data-tab="utility"  onclick="showTab('utility',null)"><span class="tab-ico">⊕</span>Utility</div>
+    <div class="tab"     data-tab="sources"  onclick="showTab('sources',null)"><span class="tab-ico">◎</span>Sources</div>
+    <div class="tab"     data-tab="autoplay" onclick="showTab('autoplay',null)"><span class="tab-ico">∿</span>Autoplay</div>
+    <div class="tab"     data-tab="changelog" onclick="showTab('changelog',null)"><span class="tab-ico">◷</span>Changelog</div>
+    <button id="theme-btn" onclick="toggleTheme()" title="Toggle dark/light mode" aria-label="Toggle theme">☀</button>
+  </div>
+
+  <!-- ═══════════════ HOME ═══════════════ -->
+  <div class="page on" id="p-home">
+    <div class="hero">
+      <div class="hero-eye">Music Bot · Command Reference</div>
+      <h1 class="hero-h">Smooth<br><em>Operator</em></h1>
+      <p class="hero-sub">Premium Discord music — multi-platform streaming, AI autoplay, 17 real-time filters, full DJ control, zero-gap audio.</p>
+      <div class="pills">
+        <span class="pill pg">♫ Multi-platform</span>
+        <span class="pill po">⚡ 6 Lavalink Nodes</span>
+        <span class="pill pb">/ Slash + Prefix</span>
+        <span class="pill pp">∿ AI Autoplay</span>
+        <span class="pill pg">◈ 17 Filters</span>
+        <span class="pill pt">↻ 24/7 Mode</span>
+        <span class="pill pk">♡ Liked Songs</span>
+        
+      </div>
+    </div>
+    <div class="ov-grid">
+      <a class="ov-c" href="#" onclick="showTab('play',null);return false;"><div class="ov-ico">♫</div><div class="ov-name">Playback</div><div class="ov-cnt">14 commands</div><div class="ov-desc">Play, pause, skip, stop, seek, forward, rewind, replay, previous</div></a>
+      <a class="ov-c" href="#" onclick="showTab('search',null);return false;"><div class="ov-ico">⌕</div><div class="ov-name">Search</div><div class="ov-cnt">3 commands</div><div class="ov-desc">Interactive search with live autocomplete across YouTube, Spotify, SoundCloud</div></a>
+      <a class="ov-c" href="#" onclick="showTab('queue',null);return false;"><div class="ov-ico">≡</div><div class="ov-name">Queue</div><div class="ov-cnt">11 commands</div><div class="ov-desc">Loop, shuffle, volume, remove, move, bump, autoplay, history, lyrics</div></a>
+      <a class="ov-c" href="#" onclick="showTab('controls',null);return false;"><div class="ov-ico">⏵</div><div class="ov-name">Controls</div><div class="ov-cnt">8 commands</div><div class="ov-desc">Grab, voteskip, movebot, cleanqueue, removedupes, vcstatus, forcefix</div></a>
+      <a class="ov-c" href="#" onclick="showTab('filter',null);return false;"><div class="ov-ico">◈</div><div class="ov-name">Audio Filters</div><div class="ov-cnt">17 filters</div><div class="ov-desc">Bassboost, nightcore, lofi, 8D, karaoke, phonk, chipmunk and more</div></a>
+      <a class="ov-c" href="#" onclick="showTab('playlist',null);return false;"><div class="ov-ico">▤</div><div class="ov-name">Playlists</div><div class="ov-cnt">4 subcommands</div><div class="ov-desc">Save, load, list, and delete your personal playlists</div></a>
+      <a class="ov-c" href="#" onclick="showTab('liked',null);return false;"><div class="ov-ico">♡</div><div class="ov-name">Liked Songs</div><div class="ov-cnt">5 subcommands</div><div class="ov-desc">Personal library across all servers</div></a>
+      <a class="ov-c" href="#" onclick="showTab('dj',null);return false;"><div class="ov-ico">⚡</div><div class="ov-name">DJ System</div><div class="ov-cnt">4 commands</div><div class="ov-desc">Role-based permissions, per-command restrictions</div></a>
+      <a class="ov-c" href="#" onclick="showTab('config',null);return false;"><div class="ov-ico">⚙</div><div class="ov-name">Configuration</div><div class="ov-cnt">5 commands</div><div class="ov-desc">Prefix, announce, buttons, settings, reset</div></a>
+      <a class="ov-c" href="#" onclick="showTab('utility',null);return false;"><div class="ov-ico">⊕</div><div class="ov-name">Utility</div><div class="ov-cnt">4 commands</div><div class="ov-desc">Ping, stats, invite, help</div></a>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PLAYBACK ═══════════════ -->
+  <div class="page" id="p-play">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(0,0,0,.05);border-color:var(--bdr2);color:var(--ink);">♫</div>
+      <div>
+        <div class="pg-title">Playback</div>
+        <div class="pg-desc">Stream from YouTube, Spotify, Apple Music, Deezer, Yandex, SoundCloud, Tidal and any direct URL.</div>
+        <div class="pg-count">14 commands</div>
+      </div>
+    </div>
+    <div class="tag-filter" id="play-filter">
+      <button class="tf-btn active" onclick="filterMG('play','all',this)">All</button>
+      <button class="tf-btn" onclick="filterMG('play','core',this)">Core</button>
+      <button class="tf-btn" onclick="filterMG('play','seek',this)">Seek</button>
+      <button class="tf-btn" onclick="filterMG('play','skip',this)">Skip</button>
+      <button class="tf-btn" onclick="filterMG('play','voice',this)">Voice</button>
+    </div>
+    <span class="cmd-count-badge" id="play-count">14 commands</span>
+    <!-- Minimal Gallery style grid -->
+    <div class="mg-grid" id="g-play">
+      <div class="mg-card" data-c="play" data-tags="core url stream" onclick="copyCmd(this,'-play')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">play</div><div class="mg-alias">-play &nbsp;/&nbsp; -p</div><div class="mg-desc">Play a song or playlist from any supported source — name, URL, Spotify link, Apple Music link, playlist.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span><span class="mg-tag">url</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="core control" onclick="copyCmd(this,'-pause')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">pause</div><div class="mg-alias">-pause</div><div class="mg-desc">Pause the current track. Position is preserved.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="core control" onclick="copyCmd(this,'-resume')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">resume</div><div class="mg-alias">-resume &nbsp;/&nbsp; -r</div><div class="mg-desc">Resume a paused track from where it stopped.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="core skip" onclick="copyCmd(this,'-skip')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">skip</div><div class="mg-alias">-skip &nbsp;/&nbsp; -s &nbsp;/&nbsp; -next</div><div class="mg-desc">Skip the current track and play the next one immediately.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="core stop" onclick="copyCmd(this,'-stop')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">stop</div><div class="mg-alias">-stop &nbsp;/&nbsp; -dc &nbsp;/&nbsp; -leave</div><div class="mg-desc">Stop playback, clear queue, disconnect from voice.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="seek position" onclick="copyCmd(this,'-seek')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">seek</div><div class="mg-alias">-seek 1:30 &nbsp;/&nbsp; -seek 90</div><div class="mg-desc">Jump to a position. Accepts m:ss or raw seconds.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="seek position" onclick="copyCmd(this,'-forward')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">forward</div><div class="mg-alias">-forward &nbsp;/&nbsp; -ff</div><div class="mg-desc">Fast forward by N seconds (default 10s).</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="seek position" onclick="copyCmd(this,'-rewind')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">rewind</div><div class="mg-alias">-rewind &nbsp;/&nbsp; -rw</div><div class="mg-desc">Rewind by N seconds (default 10s).</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="repeat" onclick="copyCmd(this,'-replay')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">replay</div><div class="mg-alias">-replay &nbsp;/&nbsp; -restart</div><div class="mg-desc">Restart the current track from the beginning.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="history back" onclick="copyCmd(this,'-previous')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">previous</div><div class="mg-alias">-prev &nbsp;/&nbsp; -back</div><div class="mg-desc">Play the track that was playing before the current one.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="skip jump position" onclick="copyCmd(this,'-skipto')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">skipto</div><div class="mg-alias">-skipto &nbsp;/&nbsp; -jump</div><div class="mg-desc">Jump to a specific queue position, skipping all tracks before it.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="info status" onclick="copyCmd(this,'-nowplaying')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">nowplaying</div><div class="mg-alias">-nowplaying &nbsp;/&nbsp; -np</div><div class="mg-desc">Current track with progress bar, source, loop, volume. Includes ◀◀ ⏸ ▶▶ ⏹ ↻ buttons.</div><div class="mg-tags"><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="connect voice" onclick="copyCmd(this,'-connect')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">connect</div><div class="mg-alias">-connect &nbsp;/&nbsp; -join</div><div class="mg-desc">Connect to your voice channel without playing anything.</div><div class="mg-tags"><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+      <div class="mg-card" data-c="play" data-tags="247 stay dj" onclick="copyCmd(this,'-247')"><div class="mg-cat-bar" style="background:var(--c-play)"></div><div class="mg-name">247</div><div class="mg-alias">-247 &nbsp;/&nbsp; -nonstop</div><div class="mg-desc">Toggle 24/7 mode — bot stays in voice permanently, auto-rejoins on disconnect.</div><div class="mg-tags"><span class="mg-tag">dj only</span><span class="mg-tag">voice</span><span class="mg-tag">/slash</span></div></div>
+    </div>
+  </div></div>
+
+  <!-- ═══════════════ SEARCH ═══════════════ -->
+  <div class="page" id="p-search">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(84,160,255,.1);border-color:rgba(84,160,255,.25);color:#54a0ff;">⌕</div>
+      <div><div class="pg-title">Search</div><div class="pg-desc">Interactive search and lyrics. <code>/play</code> and <code>/search</code> show live results from multiple platforms as you type.</div><div class="pg-count">3 commands</div></div>
+    </div>
+    <div class="info"><strong>Live Autocomplete</strong> — While using <code>/play</code> or <code>/search</code>, results from YouTube ▶ · SoundCloud ☁ · Spotify ◎ appear interleaved. Add a source prefix to lock to one platform: <code>spotify: shape of you</code> · <code>sc: phonk</code> · <code>yt: lofi</code> · <code>dz: weeknd</code> · <code>am: taylor</code> · <code>ym: russian pop</code></div>
+    <div class="sub"><div class="sub-lbl">Commands</div><div class="grid" id="g-search">
+      <div class="card" data-c="search"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>search</div><div class="ca">aliases: find, sc</div><div class="cd">Search and pick from 5 interactive results using numbered buttons. 30 second timeout. Slash version has live autocomplete.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash autocomplete</span><span class="cu">-search &lt;song name&gt;</span></div></div></div>
+      <div class="card" data-c="search"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>lyrics</div><div class="ca">aliases: ly</div><div class="cd">Fetch lyrics for the currently playing track automatically.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-lyrics</span></div></div></div>
+      <div class="card" data-c="search"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>lyricssearch</div><div class="ca">aliases: ls, findlyrics</div><div class="cd">Search lyrics for any song by name. Nothing needs to be playing.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-lyricssearch &lt;song name&gt;</span></div></div></div>
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ QUEUE ═══════════════ -->
+  <div class="page" id="p-queue">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(197,108,240,.1);border-color:rgba(197,108,240,.25);color:#c56cf0;">≡</div>
+      <div><div class="pg-title">Queue</div><div class="pg-desc">View and manage the playback queue — loop, shuffle, volume, remove, move, bump, history</div><div class="pg-count">11 commands</div></div>
+    </div>
+    <div class="sub"><div class="sub-lbl">Commands</div><div class="grid" id="g-queue">
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>queue</div><div class="ca">aliases: q</div><div class="cd">View the queue, 10 tracks per page. Shows now playing, duration, requester.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-queue [page]</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>loop</div><div class="ca">aliases: repeat</div><div class="cd">Set loop mode: <code>off</code> · <code>track</code> (repeat current) · <code>queue</code> (repeat all).</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-loop &lt;off|track|queue&gt;</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>shuffle</div><div class="cd">Randomly shuffle all queued tracks. Current track unaffected.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-shuffle</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>volume</div><div class="ca">aliases: vol</div><div class="cd">Set playback volume 0–200. Default 100.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-volume &lt;0–200&gt;</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>remove</div><div class="ca">aliases: rm</div><div class="cd">Remove a track by its queue position number.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-remove &lt;position&gt;</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>move</div><div class="ca">aliases: mv</div><div class="cd">Move a track from one queue position to another.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-move &lt;from&gt; &lt;to&gt;</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>bump</div><div class="cd">Move any track to position #1 so it plays next, without skipping current.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-bump &lt;position&gt;</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>clearqueue</div><div class="ca">aliases: cq, clear</div><div class="cd">Clear all queued tracks. Current track unaffected. DJ required.</div><div class="cf"><span class="tag td">DJ Only</span><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-clearqueue</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>autoplay</div><div class="ca">aliases: ap</div><div class="cd">Toggle AI autoplay — when queue ends the bot finds related tracks. Works for any language, genre, or artist.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-autoplay</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>previousadd</div><div class="ca">aliases: addprev</div><div class="cd">Add the previously played track back to queue end without interrupting current.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-previousadd</span></div></div></div>
+      <div class="card" data-c="queue"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>history</div><div class="ca">aliases: recent</div><div class="cd">Recently played tracks with timestamps. Stored per-guild (last 500 tracks). Paginated.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-history [page]</span></div></div></div>
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ CONTROLS ═══════════════ -->
+  <div class="page" id="p-controls">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(0,210,211,.1);border-color:rgba(0,210,211,.25);color:#00d2d3;">⏵</div>
+      <div><div class="pg-title">Controls</div><div class="pg-desc">Advanced controls — grab, voteskip, bot movement, cleanup utilities, and player recovery</div><div class="pg-count">8 commands</div></div>
+    </div>
+    <div class="sub"><div class="sub-lbl">Commands</div><div class="grid" id="g-controls">
+      <div class="card" data-c="controls"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>grab</div><div class="ca">aliases: save, fav</div><div class="cd">DM yourself the current track's title, artist, duration, and link. DMs must be open.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-grab</span></div></div></div>
+      <div class="card" data-c="controls"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>voteskip</div><div class="ca">aliases: vs</div><div class="cd">Vote to skip. Requires 50%+ of listeners. Votes expire after 60s.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-voteskip</span></div></div></div>
+      <div class="card" data-c="controls"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>movebot</div><div class="ca">aliases: summon, moveme</div><div class="cd">Move the bot to your voice channel without stopping playback. DJ required.</div><div class="cf"><span class="tag td">DJ Only</span><span class="tag ts">/slash</span><span class="cu">-movebot</span></div></div></div>
+      <div class="card" data-c="controls"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>cleanqueue</div><div class="ca">aliases: clean, removeabsent</div><div class="cd">Remove tracks requested by members who have left the voice channel.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-cleanqueue</span></div></div></div>
+      <div class="card" data-c="controls"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>removedupes</div><div class="ca">aliases: dedup, distinct</div><div class="cd">Remove all duplicate tracks from queue, keeping the first occurrence.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-removedupes</span></div></div></div>
+      <div class="card" data-c="controls"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>voicechannelstatus</div><div class="ca">aliases: vcstatus, vcs</div><div class="cd">Toggle auto-updating the voice channel name to show the current song. DJ required.</div><div class="cf"><span class="tag td">DJ Only</span><span class="tag ts">/slash</span><span class="cu">-vcstatus</span></div></div></div>
+      <div class="card" data-c="controls"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>forcefix</div><div class="ca">aliases: fix</div><div class="cd">Force-fix a broken player — fully reconnects, restores queue and resumes. DJ required. 10s cooldown.</div><div class="cf"><span class="tag td">DJ Only</span><span class="tag ts">/slash</span><span class="cu">-forcefix</span></div></div></div>
+      <div class="card" data-c="controls"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">◀◀  ⏸  ▶▶  ⏹  ↻</span></div><div class="cd">Embed buttons on every Now Playing message. ◀◀ previous · ⏸/▶ pause/resume · ▶▶ skip · ⏹ stop · ↻ cycles loop mode.</div><div class="cf"><span class="tag ts">Embed Buttons</span></div></div></div>
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ FILTERS ═══════════════ -->
+  <div class="page" id="p-filter">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(255,159,67,.1);border-color:rgba(255,159,67,.25);color:#ff9f43;">◈</div>
+      <div><div class="pg-title">Audio Filters</div><div class="pg-desc">17 real-time DSP filters via Lavalink — applied instantly. Use <code>-filter clear</code> to remove. Only one active at a time.</div><div class="pg-count">1 command · 17 filters</div></div>
+    </div>
+    <div class="sub"><div class="sub-lbl">Filter Command</div><div class="grid">
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter</div><div class="ca">aliases: f, fx</div><div class="cd">Apply a filter by name, remove all with <code>clear</code>, or show the list with <code>list</code>.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-filter &lt;name | clear | list&gt;</span></div></div></div>
+    </div></div>
+    <div class="sub"><div class="sub-lbl">All 17 Filters</div><div class="grid" id="g-filter">
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter bassboost</div><div class="cd">Heavy bass boost via 10-band EQ.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter deepbass</div><div class="cd">Extreme sub-bass boost — heavier than bassboost.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter nightcore</div><div class="cd">Speed + pitch 1.3× — the classic nightcore effect.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter daycore</div><div class="cd">Speed + pitch 0.75× — reverse nightcore, slowed and lowered.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter vaporwave</div><div class="cd">Speed + pitch 0.8× — nostalgic vaporwave aesthetic.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter slowed</div><div class="cd">0.85× speed, pitch unchanged — slowed + reverb vibe.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter chipmunk</div><div class="cd">High pitch + speed — chipmunk voice effect.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter darthvader</div><div class="cd">Pitch 0.5× — deep ominous Darth Vader voice.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter lofi</div><div class="cd">Low-pass + EQ + slight slowdown — lo-fi hip hop study beats.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter 8d</div><div class="cd">Rotating stereo pan — audio moves around your head. Best with headphones.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter karaoke</div><div class="cd">Removes centre channel to suppress vocals.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter tremolo</div><div class="cd">Volume oscillation at 2Hz — guitar-amp wobble.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter vibrato</div><div class="cd">Pitch oscillation at 2Hz — gentle wavering pitch.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter vibration</div><div class="cd">Stronger vibrato at 4Hz — intense pitch wobble.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter soft</div><div class="cd">Low-pass smoothing — removes harsh highs, warmer sound.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter pop</div><div class="cd">Mid-range EQ boost — enhances vocals and clarity.</div></div></div>
+      <div class="card" data-c="filter"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>filter treble</div><div class="cd">High-frequency EQ boost — adds brightness and air.</div></div></div>
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ PLAYLISTS ═══════════════ -->
+  <div class="page" id="p-playlist">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(255,211,42,.1);border-color:rgba(255,211,42,.25);color:#ffd32a;">▤</div>
+      <div><div class="pg-title">Playlists</div><div class="pg-desc">Personal playlists stored permanently per-user. Use <code>-playlist &lt;subcommand&gt;</code> or <code>/playlist</code>.</div><div class="pg-count">4 subcommands</div></div>
+    </div>
+    <div class="sub"><div class="sub-lbl">Subcommands</div><div class="grid" id="g-playlist">
+      <div class="card" data-c="playlist"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>playlist save</div><div class="cd">Save current queue as a named playlist. Overwrites if name exists.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-playlist save &lt;name&gt;</span></div></div></div>
+      <div class="card" data-c="playlist"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>playlist load</div><div class="cd">Load all tracks from a saved playlist into the queue.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-playlist load &lt;name&gt;</span></div></div></div>
+      <div class="card" data-c="playlist"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>playlist list</div><div class="cd">List all your saved playlists with track counts.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-playlist list</span></div></div></div>
+      <div class="card" data-c="playlist"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>playlist delete</div><div class="cd">Permanently delete a saved playlist by name.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-playlist delete &lt;name&gt;</span></div></div></div>
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ LIKED SONGS ═══════════════ -->
+  <div class="page" id="p-liked">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(253,121,168,.1);border-color:rgba(253,121,168,.25);color:#fd79a8;">♡</div>
+      <div><div class="pg-title">Liked Songs</div><div class="pg-desc">Personal library across all servers — like tracks as they play. Stored globally per user.</div><div class="pg-count">5 subcommands</div></div>
+    </div>
+    <div class="sub"><div class="sub-lbl">Subcommands</div><div class="grid" id="g-liked">
+      <div class="card" data-c="liked"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>liked add</div><div class="ca">aliases: like</div><div class="cd">Add the currently playing track to your liked songs. Deduplicated.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-liked add</span></div></div></div>
+      <div class="card" data-c="liked"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>liked remove</div><div class="ca">aliases: dislike</div><div class="cd">Remove the currently playing track from liked songs.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-liked remove</span></div></div></div>
+      <div class="card" data-c="liked"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>liked list</div><div class="ca">aliases: showliked, favorites</div><div class="cd">View all your liked songs. Paginated, 10 per page. Works outside voice.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-liked list [page]</span></div></div></div>
+      <div class="card" data-c="liked"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>liked play</div><div class="ca">aliases: playliked</div><div class="cd">Queue all your liked songs (up to 100) and start playing.</div><div class="cf"><span class="tag tv">Voice</span><span class="tag ts">/slash</span><span class="cu">-liked play</span></div></div></div>
+      <div class="card" data-c="liked"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>liked clear</div><div class="cd">Permanently clear your entire liked songs library.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-liked clear</span></div></div></div>
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ DJ ═══════════════ -->
+  <div class="page" id="p-dj">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(255,71,87,.1);border-color:rgba(255,71,87,.25);color:#ff4757;">⚡</div>
+      <div><div class="pg-title">DJ System</div><div class="pg-desc">Role-based permission system. Admins (Manage Server) always bypass. Applies to both prefix and slash commands.</div><div class="pg-count">4 commands · Manage Server required</div></div>
+    </div>
+    <div class="info"><strong>How DJ Mode Works</strong> — Enable with <code>-djsetup @role</code>. All music commands then require the DJ role. Individual commands can also be restricted separately with <code>-djrestrict</code> regardless of global mode.</div>
+    <div class="sub"><div class="sub-lbl">Commands</div><div class="grid" id="g-dj">
+      <div class="card" data-c="dj"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>djsetup</div><div class="ca">aliases: djs</div><div class="cd">Enable DJ mode and set the DJ role. Mention a role to set it. <code>off</code> to disable. No args = toggle mode only.</div><div class="cf"><span class="tag tg">Manage Server</span><span class="tag ts">/slash</span><span class="cu">-djsetup @role | -djsetup off</span></div></div></div>
+      <div class="card" data-c="dj"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>djinfo</div><div class="ca">aliases: dji</div><div class="cd">Show DJ role, whether mode is on, and list of individually restricted commands.</div><div class="cf"><span class="tag tg">Manage Server</span><span class="tag ts">/slash</span><span class="cu">-djinfo</span></div></div></div>
+      <div class="card" data-c="dj"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>djreset</div><div class="cd">Reset all DJ settings — removes role, disables mode, clears all restrictions.</div><div class="cf"><span class="tag tg">Manage Server</span><span class="tag ts">/slash</span><span class="cu">-djreset</span></div></div></div>
+      <div class="card" data-c="dj"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>djrestrict</div><div class="ca">aliases: restrictcommand</div><div class="cd">Toggle any command to be DJ-only, independent of global mode. Run again to unrestrict.</div><div class="cf"><span class="tag tg">Manage Server</span><span class="tag ts">/slash</span><span class="cu">-djrestrict &lt;command&gt;</span></div></div></div>
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ CONFIG ═══════════════ -->
+  <div class="page" id="p-config">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(162,155,254,.1);border-color:rgba(162,155,254,.25);color:#a29bfe;">⚙</div>
+      <div><div class="pg-title">Configuration</div><div class="pg-desc">Server-wide settings. All require Manage Server.</div><div class="pg-count">5 commands</div></div>
+    </div>
+    <div class="sub"><div class="sub-lbl">Commands</div><div class="grid" id="g-config">
+      <div class="card" data-c="config"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>settings</div><div class="ca">aliases: config, set</div><div class="cd">View all server settings. Subcommands: <code>djrole</code> · <code>volume</code> · <code>247</code> · <code>announce</code>.</div><div class="cf"><span class="tag tg">Manage Server</span><span class="tag ts">/slash</span><span class="cu">-settings</span></div></div></div>
+      <div class="card" data-c="config"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>setprefix</div><div class="cd">Change the bot prefix for this server (max 5 chars). Default <code>-</code> always works.</div><div class="cf"><span class="tag tg">Manage Server</span><span class="tag ts">/slash</span><span class="cu">-setprefix !</span></div></div></div>
+      <div class="card" data-c="config"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>announce</div><div class="cd">Toggle the Now Playing embed that appears when each track starts.</div><div class="cf"><span class="tag tg">Manage Server</span><span class="tag ts">/slash</span><span class="cu">-announce</span></div></div></div>
+      <div class="card" data-c="config"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>buttons</div><div class="cd">Toggle the ◀◀ ⏸ ▶▶ ⏹ ↻ control buttons on Now Playing embeds.</div><div class="cf"><span class="tag tg">Manage Server</span><span class="tag ts">/slash</span><span class="cu">-buttons</span></div></div></div>
+      <div class="card" data-c="config"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>settingsreset</div><div class="ca">aliases: resetconfig</div><div class="cd">Reset all server settings to defaults. Cannot be undone.</div><div class="cf"><span class="tag tg">Manage Server</span><span class="tag ts">/slash</span><span class="cu">-settingsreset</span></div></div></div>
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ UTILITY ═══════════════ -->
+  <div class="page" id="p-utility">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(85,239,196,.1);border-color:rgba(85,239,196,.25);color:#55efc4;">⊕</div>
+      <div><div class="pg-title">Utility</div><div class="pg-desc">Bot info, latency, and help</div><div class="pg-count">4 commands</div></div>
+    </div>
+    <div class="sub"><div class="sub-lbl">Commands</div><div class="grid" id="g-utility">
+      <div class="card" data-c="utility"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>ping</div><div class="cd">Show bot latency, WebSocket heartbeat, and status of all Lavalink nodes.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-ping</span></div></div></div>
+      <div class="card" data-c="utility"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>stats</div><div class="cd">Bot stats: servers, active players, uptime, memory, Node.js version, node health. 10s cooldown.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-stats</span></div></div></div>
+      <div class="card" data-c="utility"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>invite</div><div class="cd">Get the invite link to add Smooth Operator to another server.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-invite</span></div></div></div>
+      <div class="card" data-c="utility"><div class="bar"></div><div class="body"><div class="cn"><span class="pfx">-</span>help</div><div class="ca">aliases: h, commands</div><div class="cd">All commands by category, or detailed info on a specific command.</div><div class="cf"><span class="tag ts">/slash</span><span class="cu">-help | -help play</span></div></div></div>
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ SOURCES ═══════════════ -->
+  <div class="page" id="p-sources">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(197,108,240,.1);border-color:rgba(197,108,240,.25);color:#c56cf0;">◎</div>
+      <div><div class="pg-title">Sources &amp; Autocomplete</div><div class="pg-desc">All sources work with <code>-play</code> via URL or search. Use prefix keywords in <code>/play</code> autocomplete to lock to one platform.</div><div class="pg-count">6 platforms + direct URL</div></div>
+    </div>
+    <div class="src-grid">
+      <div class="src-c"><div class="src-ico">▶</div><div><div class="src-nm">YouTube</div><div class="src-kw">yt: · youtube:</div></div></div>
+      <div class="src-c"><div class="src-ico">◎</div><div><div class="src-nm">Spotify</div><div class="src-kw">sp: · spotify:</div></div></div>
+      <div class="src-c"><div class="src-ico">⊕</div><div><div class="src-nm">Apple Music</div><div class="src-kw">am: · apple:</div></div></div>
+      <div class="src-c"><div class="src-ico">◆</div><div><div class="src-nm">Deezer</div><div class="src-kw">dz: · deezer:</div></div></div>
+      <div class="src-c"><div class="src-ico">☁</div><div><div class="src-nm">SoundCloud</div><div class="src-kw">sc: · soundcloud:</div></div></div>
+      <div class="src-c"><div class="src-ico">◈</div><div><div class="src-nm">Yandex Music</div><div class="src-kw">ym: · yandex:</div></div></div>
+      <div class="src-c"><div class="src-ico">🔗</div><div><div class="src-nm">Direct URL</div><div class="src-kw">Any direct link</div></div></div>
+    </div>
+    <div class="info">
+      <strong>Default (no prefix)</strong> — results from YouTube ▶ + SoundCloud ☁ + Spotify ◎ interleaved, up to 8 suggestions per search.<br>
+      <strong>With prefix</strong> — <code>spotify: shape of you</code> locks results to Spotify only. Each suggestion shows a source icon and track duration.
+    </div>
+  </div></div>
+
+  <!-- ═══════════════ AUTOPLAY ═══════════════ -->
+  <div class="page" id="p-autoplay">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(0,0,0,0.30);border-color:rgba(0,0,0,0.50);color:#000000;">∿</div>
+      <div><div class="pg-title">Autoplay Engine</div><div class="pg-desc">Spotify-style BaRT algorithm — works for any track, any language, any genre, even completely unknown content. Enable with <code>-autoplay</code>.</div></div>
+    </div>
+    <div class="info" style="border-left-color:var(--g2);">
+      <strong>Metadata-driven</strong> — never depends on keyword lists or genre databases to function. Those signals improve results when detected, but even with zero matches it still works using only the raw data from Lavalink: artist name, title, duration, source, and session history.
+    </div>
+    <div class="sub"><div class="sub-lbl">BaRT Strategy</div>
+    <div class="sig-grid">
+      <div class="sig"><div class="sig-t">Exploit (70%) — Familiar</div><div class="sig-d">Same artist, artist hits, seed title + artist, genre-aware artist queries, most-played session artist. Always works from raw metadata.</div></div>
+      <div class="sig"><div class="sig-t">Explore (30%) — Discovery</div><div class="sig-d">Every 3rd call: genre-aware searches, "fans also like", title similarity, session diversity query, source-aware angle. Falls back gracefully when nothing is detected.</div></div>
+      <div class="sig"><div class="sig-t">Session Dedup</div><div class="sig-d">Hard URI dedup — same song never repeated in a session (up to 50 tracks). Resets automatically when full, like Spotify restarting radio.</div></div>
+      <div class="sig"><div class="sig-t">Random Top-N</div><div class="sig-d">Never picks the first result blindly. Selects randomly from top 3–5 fresh results so even repeated queries give variety.</div></div>
+    </div></div>
+    <div class="sub"><div class="sub-lbl">Pure Metadata Signals (no keywords needed)</div>
+    <div class="sig-grid">
+      <div class="sig"><div class="sig-t">Top Artist</div><div class="sig-d">Counts artist frequency across the last 6 tracks. Most-played artist shapes exploit queries. Pure count — no keywords.</div></div>
+      <div class="sig"><div class="sig-t">Duration Heuristic</div><div class="sig-d">When genre detection fails: short tracks (&lt;2.5min) → pop/rap angle · long tracks (&gt;6min) → ambient/classical angle. Uses raw <code>length</code> from Lavalink.</div></div>
+      <div class="sig"><div class="sig-t">Session Diversity</div><div class="sig-d">1 artist → dig deeper (discography) · 2–3 artists → crossover mix · 4+ artists → compilation mode. Built from <code>author</code> fields only.</div></div>
+      <div class="sig"><div class="sig-t">Source-Aware</div><div class="sig-d">Spotify source → chart angle · SoundCloud → underground · Deezer/Apple → official · YouTube → recommended. Uses <code>sourceName</code> from Lavalink.</div></div>
+    </div></div>
+    <div class="sub"><div class="sub-lbl">Language + Genre Detection (optional enhancement)</div>
+    <div class="info" style="margin-bottom:0;">
+      Detected from track titles and artist names when keywords match. Improves explore queries by adding language context. <strong>English is the default — never needs explicit detection.</strong><br><br>
+      <strong>28 Languages:</strong> Punjabi · Hindi · Tamil · Telugu · Kannada · Malayalam · Marathi · Bengali · Gujarati · Bhojpuri · Urdu · Korean · Japanese · Mandarin · Cantonese · Indonesian · Thai · Vietnamese · Filipino · Arabic · Turkish · Persian · Spanish · Portuguese · French · German · Italian · Russian · Ukrainian · Afrobeats · Swahili<br><br>
+      <strong>52 Genres:</strong> Lofi · Ambient · EDM · House · Techno · Dubstep · Drum &amp; Bass · Trance · Future Bass · Synthwave · Phonk · Hip-hop · Trap · Drill · Grime · R&amp;B · Soul · Funk · Gospel · Pop · Indie Pop · Electropop · K-pop · J-pop · Rock · Indie Rock · Alternative · Metal · Punk · Classic Rock · Hard Rock · Progressive Rock · Acoustic · Folk · Country · Americana · Classical · Piano · Jazz · Blues · Instrumental · Sad · Romantic · Motivational · Happy · Nostalgic · Dark · Chill · Workout · Party · Sleep · Bhangra · Qawwali · Ghazal · Afrobeats · Reggae · Bossa Nova · Flamenco · Celtic · Cumbia · Anime
+    </div></div>
+  </div></div>
+
+  <!-- ═══════════════ CHANGELOG ═══════════════ -->
+  <div class="page" id="p-changelog">
+  <div class="pg-inner">
+    <div class="pg-hdr">
+      <div class="pg-ico" style="background:rgba(255,211,42,.1);border-color:rgba(255,211,42,.25);color:#ffd32a;">◷</div>
+      <div><div class="pg-title">Changelog</div><div class="pg-desc">What changed in each version — features, fixes, and improvements.</div></div>
+    </div>
+    <div class="cl-wrap">
+
+      <div class="cl-ver">
+        <div class="cl-ver-hdr">
+          <div class="cl-ver-num">v1.6</div>
+          <div class="cl-ver-name">— Deployment Fix · Language &amp; Genre Expansion</div>
+          <div class="cl-ver-date">Mar 2026</div>
+        </div>
+        <div class="cl-items">
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> Deployment failures on justrunmy.app</div><div class="cl-id">Three root causes resolved — bot now deploys and starts reliably.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> Autoplay broken for English songs</div><div class="cl-id">English was missing from language detection — explore queries were generating garbage. English is now the explicit default.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--blue)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag i">Improved</span> Language detection: 6 → 28 languages</div><div class="cl-id">Added South Asian, East Asian, Southeast Asian, Middle Eastern, European, and African languages. Each with artist name keywords.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--blue)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag i">Improved</span> Genre detection: 18 → 52 genres</div><div class="cl-id">Added Phonk, House, Techno, Dubstep, Drum &amp; Bass, Trance, Grime, R&amp;B, Soul, Funk, Gospel, K-pop, J-pop, Punk, Classic Rock, Progressive Rock, Americana, Blues, Piano, and more.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Metadata-driven autoplay signals</div><div class="cl-id">Autoplay now works for <em>any</em> track regardless of keyword matches — uses track duration, session artist frequency, session diversity, and source platform as signals.</div></div></div>
+        </div>
+      </div>
+
+      <div class="cl-ver">
+        <div class="cl-ver-hdr">
+          <div class="cl-ver-num">v1.5</div>
+          <div class="cl-ver-name">— Autocomplete · Autoplay Overhaul · NP Fix</div>
+          <div class="cl-ver-date">Mar 2026</div>
+        </div>
+        <div class="cl-items">
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Live slash autocomplete for /play and /search</div><div class="cl-id">Real-time song suggestions from YouTube, SoundCloud, and Spotify as you type. Source prefix keywords lock to a single platform.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--blue)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag i">Improved</span> Autoplay — Spotify BaRT algorithm</div><div class="cl-id">70/30 exploit/explore split, 6-track context window, session dedup, NLP mood detection, title noise stripping, random top-N selection. Never repeats a song per session.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> Now Playing embed showing "(edited)"</div><div class="cl-id">Each track now sends a fresh message. Old NP buttons are disabled when the next track starts.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> Autoplay looping the same 2 songs</div><div class="cl-id">Full session URI dedup replaced single-track exclusion. Added 5 diverse search strategies with randomised result picking.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> "This guild already have an existing connection" error</div><div class="cl-id">Shoukaku only supports one voice connection per guild. Bot now moves the existing player instead of trying to create a second one.</div></div></div>
+        </div>
+      </div>
+
+      <div class="cl-ver">
+        <div class="cl-ver-hdr">
+          <div class="cl-ver-num">v1.4</div>
+          <div class="cl-ver-name">— Bug Fix Sweep</div>
+          <div class="cl-ver-date">Mar 2026</div>
+        </div>
+        <div class="cl-items">
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> VoiceState handler — bot move not detected correctly</div><div class="cl-id">Bot moving between voice channels wasn't being tracked properly. Fixed player update on voice state change.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> VoteSkip memory leak</div><div class="cl-id">Vote map never cleared. Votes now expire after 60 seconds and clear on skip or stop.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> History handler causing audio stutters</div><div class="cl-id">Was doing 3 MongoDB queries on every track start. Replaced with batched writes every 30 seconds — zero DB calls on the audio path.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> Slash commands bypassing DJ mode</div><div class="cl-id">DJ mode only applied to prefix commands. Slash commands now enforce the same restrictions.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> "Autoplay" showing as &lt;@autoplay&gt; broken mention</div><div class="cl-id">Autoplay-queued tracks now display "Autoplay" as plain text in NP embeds and queue lists.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--red)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag f">Fixed</span> messageCreate doing 2 DB queries per message</div><div class="cl-id">Prefix lookup and DJ check were separate queries. Now a single cached lookup with 60-second TTL.</div></div></div>
+        </div>
+      </div>
+
+      <div class="cl-ver">
+        <div class="cl-ver-hdr">
+          <div class="cl-ver-num">v1.3</div>
+          <div class="cl-ver-name">— Premium Audio · 3 New Nodes</div>
+          <div class="cl-ver-date">Mar 2026</div>
+        </div>
+        <div class="cl-items">
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--blue)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag i">Improved</span> Zero-gap track transitions</div><div class="cl-id">Track-end handling deferred to eliminate silence between tracks. Retry logic on audio exceptions with exponential backoff.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--blue)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag i">Improved</span> Audio quality — VC bitrate set to maximum on join</div><div class="cl-id">Bot sets the voice channel to 96kbps on join. Single biggest quality improvement.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag r">Removed</span> Multi-VC — reverted</div><div class="cl-id">Discord only allows one voice connection per bot per guild. Multi-VC was architecturally impossible and has been removed.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> 3 new Lavalink nodes (total: 6)</div><div class="cl-id">NexCloud, NyxBot SG2, NyxBot SG1 added. Node selection weighted: 60% CPU load + 40% player count.</div></div></div>
+        </div>
+      </div>
+
+      <div class="cl-ver">
+        <div class="cl-ver-hdr">
+          <div class="cl-ver-num">v1.2</div>
+          <div class="cl-ver-name">— DJ System · Config Commands · Hade Parity</div>
+          <div class="cl-ver-date">Mar 2026</div>
+        </div>
+        <div class="cl-items">
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Full DJ system</div><div class="cl-id">DJ mode, DJ role, per-command restrictions (djsetup / djinfo / djreset / djrestrict).</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Server configuration commands</div><div class="cl-id">setprefix (per-guild), settingsreset, announce, buttons, stats, invite.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Extra music commands</div><div class="cl-id">bump, movebot, previousadd, voicechannelstatus, lyrics, lyricssearch.</div></div></div>
+        </div>
+      </div>
+
+      <div class="cl-ver">
+        <div class="cl-ver-hdr">
+          <div class="cl-ver-num">v1.1</div>
+          <div class="cl-ver-name">— Slash Commands · Search · 24/7 · More Nodes</div>
+          <div class="cl-ver-date">Mar 2026</div>
+        </div>
+        <div class="cl-items">
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Global slash (/) commands</div><div class="cl-id">Every prefix command also registered as a Discord slash command. Registered globally on bot ready.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Interactive search command</div><div class="cl-id">Search YouTube and pick from 5 results using numbered buttons with a 30-second timeout.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> 24/7 mode</div><div class="cl-id">Bot stays in voice permanently. Auto-rejoins on disconnect. Skips inactivity auto-leave.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> DevamOP + HeavenCloud Lavalink nodes</div><div class="cl-id">Two additional public nodes for redundancy and load balancing. Total: 3 nodes.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--orange)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag r">Removed</span> Redis dependency</div><div class="cl-id">Redis was referenced but never used. Removed — bot runs entirely on MongoDB.</div></div></div>
+        </div>
+      </div>
+
+      <div class="cl-ver">
+        <div class="cl-ver-hdr">
+          <div class="cl-ver-num">v1.0</div>
+          <div class="cl-ver-name">— Initial Release</div>
+          <div class="cl-ver-date">Mar 2026</div>
+        </div>
+        <div class="cl-items">
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Core bot — TypeScript · Discord.js v14 · Shoukaku v4</div><div class="cl-id">Prefix <code>-</code>, no emojis in embeds, ts-node no-build deployment.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Full music command suite — 30+ commands</div><div class="cl-id">play, pause, skip, stop, seek, queue, loop, shuffle, volume, filters, autoplay, grab, voteskip, history, playlist, liked, forcefix, cleanqueue, removedupes and more.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> 17 audio filters</div><div class="cl-id">bassboost, deepbass, nightcore, daycore, vaporwave, slowed, chipmunk, darthvader, lofi, 8d, karaoke, tremolo, vibrato, vibration, soft, pop, treble.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> MongoDB — playlists, liked songs, guild settings, history</div><div class="cl-id">MongoDB Atlas free tier. GuildSettings · Playlist · History (500/guild) · LikedSong schemas.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Now Playing embed with ◀◀ ⏸ ▶▶ ⏹ ↻ buttons</div><div class="cl-id">Interactive control buttons on every track. Button collector tied to track duration.</div></div></div>
+          <div class="cl-item"><div class="cl-bullet" style="background:var(--g)"></div><div class="cl-text"><div class="cl-it"><span class="cl-tag a">Added</span> Serenetia public Lavalink node</div><div class="cl-id">Free Lavalink v4 node with LavaSrc — Spotify, Apple Music, Deezer, Yandex, YouTube, SoundCloud support built-in.</div></div></div>
+        </div>
+      </div>
+
+    </div>
+  </div></div>
+
+  <div id="no-r">No commands matched your search.</div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ── THEME SYSTEM ──────────────────────────────────────────────
+// Persists choice in localStorage, respects OS preference as default
+function getSystemTheme(){
+  return window.matchMedia('(prefers-color-scheme:dark)').matches ? 'dark' : 'light';
+}
+function applyTheme(t){
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('so-theme', t);
+  const btn = document.getElementById('theme-btn');
+  if(btn) btn.textContent = t === 'dark' ? '☀' : '☾';
+  // also update meta theme-color
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if(meta) meta.content = t === 'dark' ? '#0c1a10' : '#f5f2e8';
+}
+function toggleTheme(){
+  const cur = document.documentElement.getAttribute('data-theme') || getSystemTheme();
+  applyTheme(cur === 'dark' ? 'light' : 'dark');
+}
+// Init: use saved pref, or OS default
+(function(){
+  const saved = localStorage.getItem('so-theme');
+  applyTheme(saved || getSystemTheme());
+})();
+
+// cursor
+const cd=document.getElementById('cd'),cr=document.getElementById('cr');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;cd.style.transform=`translate(${mx}px,${my}px)`;});
+(function loop(){rx+=(mx-rx)*.12;ry+=(my-ry)*.12;cr.style.transform=`translate(${rx}px,${ry}px)`;requestAnimationFrame(loop);})();
+
+// ── ANIME.JS v4 ────────────────────────────────────────────────
+const {
+  animate, stagger, createTimeline, createTimer, createAnimatable,
+  onScroll, spring, set, splitText, createScope, createDraggable,
+  utils, random, lerp, damp, irregular
+} = anime;
+
+// ─────────────────────────────────────────────────────────────
+// 1. HERO — splitText character-level entrance
+// ─────────────────────────────────────────────────────────────
+const heroH = document.querySelector('.hero-h');
+if (heroH && typeof splitText === 'function') {
+  const split = splitText(heroH, { chars: true, words: true });
+  // reset so CSS does not fight us
+  // function-based from value: each char gets a unique random starting rotation
+  const rotations = Array.from(split.chars).map(() => (Math.random() - 0.5) * 24);
+  set(split.chars, { opacity: 0, y: 40 });
+  split.chars.forEach((ch, i) => set(ch, { rotateZ: rotations[i] }));
+  createTimeline({ defaults: { ease: 'outExpo' } })
+    .add('.hero-eye',  { opacity: [0,1], x: [-18,0], duration: 500 }, 60)
+    .add(split.chars, {
+      opacity: [0,1], y: [40,0],
+      rotateZ: 0,
+      ease: { rotateZ: 'outBack(1.4)' },
+      duration: 600,
+      delay: stagger(28, { start: 0, from: 'first' }),
+    }, 140)
+    .add('.hero-sub', { opacity: [0,1], y: [16,0], duration: 500 }, 520)
+    .add('.pill', {
+      opacity: [0,1], y: [12,0], scale: [.85,1],
+      duration: 400,
+      delay: stagger(55, { start: 0 }),
+    }, 680);
+}
+
+// ─────────────────────────────────────────────────────────────
+// 2. OVERVIEW CARDS — grid stagger from center
+// ─────────────────────────────────────────────────────────────
+function animateOvCards() {
+  set('#p-home .ov-c', { opacity: 0, y: 22, scale: .93 });
+  animate('#p-home .ov-c', {
+    opacity: [0,1], y: [22,0], scale: [.93,1],
+    ease: 'outExpo', duration: 580,
+    delay: stagger(52, { start: 240, grid: [2,5], from: 'center' }),
+  });
+}
+animateOvCards();
+
+// ─────────────────────────────────────────────────────────────
+// 3. PAGE TRANSITIONS — timeline per page
+// ─────────────────────────────────────────────────────────────
+function animatePageCards(pageId) {
+  const p = '#p-' + pageId + ' ';
+  set(p + '.pg-hdr',  { opacity: 0, x: -18 });
+  set(p + '.info',    { opacity: 0, y: 12  });
+  set(p + '.sub-lbl', { opacity: 0, x: -10 });
+  set(p + '.card',    { opacity: 0, y: 20  });
+  set([p+'.sig', p+'.cl-ver', p+'.src-c'].join(', '), { opacity: 0, y: 16 });
+
+  createTimeline({ defaults: { ease: 'outExpo' } })
+    .add(p + '.pg-hdr',  { opacity:[0,1], x:[-18,0], duration: 440 }, 40)
+    .add(p + '.info',    { opacity:[0,1], y:[12,0],  duration: 380 }, 130)
+    .add(p + '.sub-lbl', { opacity:[0,1], x:[-10,0], duration: 320,
+                             delay: stagger(70) }, 190)
+    .add(p + '.card',    { opacity:[0,1], y:[20,0],  duration: 440,
+                             delay: stagger(24, { start: 0 }) }, 210)
+    .add([p+'.sig', p+'.cl-ver', p+'.src-c'].join(','),
+                           { opacity:[0,1], y:[16,0],  duration: 480,
+                             delay: stagger(44) }, 230);
+}
+
+// ─────────────────────────────────────────────────────────────
+// 4. SCROLL SYNC — cl-ver blocks scrub in as you scroll
+//    sync: true = animation progress tied to scroll position
+// ─────────────────────────────────────────────────────────────
+// Scroll-triggered animations use the .page div as container
+// since pages are the scroll containers (not window)
+function setupScrollAnims(pageId) {
+  const container = document.getElementById('p-' + pageId);
+  if (!container) return;
+  if (pageId === 'changelog') {
+    container.querySelectorAll('.cl-ver').forEach(el => {
+      animate(el, {
+        opacity:  [0, 1],
+        y:        [28, 0],
+        ease:     'outExpo',
+        duration: 560,
+        autoplay: onScroll({
+          target:    el,
+          container: container,
+          enter:     'bottom 95%',
+          leave:     'top 5%',
+          sync:      'play pause',
+        }),
+      });
+    });
+  }
+  if (pageId === 'autoplay') {
+    container.querySelectorAll('.sig').forEach((el, i) => {
+      animate(el, {
+        opacity: [0, 1],
+        y:       [18, 0],
+        ease:    'outExpo',
+        duration: 480,
+        delay:   i * 50,
+        autoplay: onScroll({
+          target:    el,
+          container: container,
+          enter:     'bottom 95%',
+        }),
+      });
+    });
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// 5. CREATESCOPE — media-query-aware: reduce animations on mobile
+// ─────────────────────────────────────────────────────────────
+createScope({
+  mediaQueries: { mobile: '(max-width: 768px)', reduced: '(prefers-reduced-motion: reduce)' },
+}).add(({ matches }) => {
+  if (matches.reduced) {
+    // respect prefers-reduced-motion: instant transitions only
+    anime.engine.timeUnit = 'ms';
+    document.querySelectorAll('.card, .ov-c, .pill').forEach(el => {
+      set(el, { opacity: 1, y: 0, scale: 1 });
+    });
+    return;
+  }
+  if (!matches.mobile) {
+    // desktop-only: subtle parallax on hero badge
+    animate('.hero-eye', {
+      y: { from: 0, to: -8, modifier: v => v },
+      ease: 'inOutSine',
+      duration: 4000,
+      loop: true,
+      alternate: true,
+    });
+  }
+});
+
+// ─────────────────────────────────────────────────────────────
+// 6. DRAGGABLE SIDEBAR — drag to open/close on mobile
+// ─────────────────────────────────────────────────────────────
+let draggableSb = null;
+function initDraggable() {
+  const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  if (window.innerWidth > 768 || draggableSb || !hasTouch) return;
+  const sb = document.querySelector('.sb');
+  draggableSb = createDraggable(sb, {
+    x: { mapTo: 'translateX', modifier: v => Math.max(-sb.offsetWidth, Math.min(0, v)) },
+    y: false,
+    releaseEase: spring({ stiffness: 300, damping: 28 }),
+    onRelease(d) {
+      const pct = (d.x + sb.offsetWidth) / sb.offsetWidth;
+      if (pct > 0.4) {
+        animate(sb, { translateX: 0,              duration: 280, ease: 'outExpo',
+          onComplete: () => sb.classList.add('open') });
+        document.getElementById('sb-overlay').classList.add('on');
+      } else {
+        animate(sb, { translateX: -sb.offsetWidth, duration: 240, ease: 'inExpo',
+          onComplete: () => sb.classList.remove('open') });
+        document.getElementById('sb-overlay').classList.remove('on');
+      }
+    },
+  });
+}
+// init after short delay so DOM is ready, re-check on resize
+setTimeout(initDraggable, 300);
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 768 && draggableSb) { draggableSb.revert(); draggableSb = null; }
+  else initDraggable();
+}, { passive: true });
+
+// ─────────────────────────────────────────────────────────────
+// 7. ANIMATABLE — high-perf spring hover on every interactive el
+// ─────────────────────────────────────────────────────────────
+// Sidebar links: slide right on hover
+document.querySelectorAll('.sb-a').forEach(link => {
+  const a = createAnimatable(link, { x: { ease: spring({ stiffness: 400, damping: 24 }), duration: 600 } });
+  link.addEventListener('mouseenter', () => a.x(5));
+  link.addEventListener('mouseleave', () => a.x(0));
+});
+
+// Pills: spring scale
+document.querySelectorAll('.pill').forEach(p => {
+  const a = createAnimatable(p, { scale: { ease: spring({ stiffness: 420, damping: 16 }), duration: 700 } });
+  p.addEventListener('mouseenter', () => a.scale(1.1));
+  p.addEventListener('mouseleave', () => a.scale(1));
+});
+
+// Overview cards: spring lift + scale
+document.querySelectorAll('.ov-c').forEach(c => {
+  const a = createAnimatable(c, {
+    y:     { ease: spring({ stiffness: 260, damping: 20 }), duration: 900 },
+    scale: { ease: spring({ stiffness: 260, damping: 20 }), duration: 900 },
+  });
+  c.addEventListener('mouseenter', () => { a.y(-6); a.scale(1.025); });
+  c.addEventListener('mouseleave', () => { a.y(0);  a.scale(1);     });
+});
+
+// Command cards: spring lift
+document.querySelectorAll('.card').forEach(c => {
+  const a = createAnimatable(c, { y: { ease: spring({ stiffness: 380, damping: 26 }), duration: 700 } });
+  c.addEventListener('mouseenter', () => a.y(-3));
+  c.addEventListener('mouseleave', () => a.y(0));
+});
+
+// ─────────────────────────────────────────────────────────────
+// 8. TABS — spring bounce on click
+// ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(t => {
+  const a = createAnimatable(t, { scale: { ease: spring({ stiffness: 480, damping: 14 }), duration: 600 } });
+  t.addEventListener('pointerdown',  () => a.scale(.88));
+  t.addEventListener('pointerup',    () => a.scale(1));
+  t.addEventListener('pointerleave', () => a.scale(1));
+});
+
+// ─────────────────────────────────────────────────────────────
+// 9. MOBILE TOUCH — spring press on cards + bottom nav
+// ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.card, .ov-c').forEach(c => {
+  const a = createAnimatable(c, { scale: { ease: spring({ stiffness: 300, damping: 18 }), duration: 700 } });
+  c.addEventListener('touchstart',  () => a.scale(.965), {passive:true});
+  c.addEventListener('touchend',    () => a.scale(1),    {passive:true});
+  c.addEventListener('touchcancel', () => a.scale(1),    {passive:true});
+});
+
+document.querySelectorAll('.bnav-btn').forEach(b => {
+  const a = createAnimatable(b, { scale: { ease: spring({ stiffness: 360, damping: 12 }), duration: 700 } });
+  b.addEventListener('touchstart',  () => a.scale(.82), {passive:true});
+  b.addEventListener('touchend',    () => a.scale(1),   {passive:true});
+  b.addEventListener('touchcancel', () => a.scale(1),   {passive:true});
+});
+
+// ─────────────────────────────────────────────────────────────
+// 10. SEARCH INPUT — keyframe pulse on focus
+// ─────────────────────────────────────────────────────────────
+document.getElementById('qi').addEventListener('focus', () => {
+  animate(document.querySelector('.sb-qi'), {
+    keyframes: [
+      { scale: 1.02, duration: 100, ease: 'outQuad'    },
+      { scale: 1,    duration: 300, ease: 'outBack(3)' },
+    ],
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// EXTRA: Tab bar — swipe left/right between tabs on mobile
+// ─────────────────────────────────────────────────────────────
+const TAB_ORDER = [
+  'home','play','search','queue','controls','filter',
+  'playlist','liked','dj','config','utility','sources','autoplay','changelog'
+];
+let swipeStartX = 0, swipeStartY = 0, swipeActive = false;
+const mainEl = document.querySelector('.main');
+mainEl.addEventListener('touchstart', e => {
+  swipeStartX = e.touches[0].clientX;
+  swipeStartY = e.touches[0].clientY;
+  swipeActive = true;
+}, { passive: true });
+mainEl.addEventListener('touchmove', e => {
+  if (!swipeActive) return;
+  const dx = e.touches[0].clientX - swipeStartX;
+  const dy = e.touches[0].clientY - swipeStartY;
+  // cancel if mostly vertical (scrolling)
+  if (Math.abs(dy) > Math.abs(dx) + 8) swipeActive = false;
+}, { passive: true });
+mainEl.addEventListener('touchend', e => {
+  if (!swipeActive) return;
+  swipeActive = false;
+  const dx = e.changedTouches[0].clientX - swipeStartX;
+  const dy = e.changedTouches[0].clientY - swipeStartY;
+  // only trigger if horizontal swipe is dominant and long enough
+  if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx) * 0.7) return;
+  const idx = TAB_ORDER.indexOf(curTab);
+  if (dx < 0 && idx < TAB_ORDER.length - 1) showTab(TAB_ORDER[idx + 1], null); // swipe left = next
+  if (dx > 0 && idx > 0)                    showTab(TAB_ORDER[idx - 1], null); // swipe right = prev
+}, { passive: true });
+
+// ─────────────────────────────────────────────────────────────
+// EXTRA: Percentage-based keyframes on overview card icons
+// Each icon does a subtle float loop
+// ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.ov-ico').forEach((ico, i) => {
+  animate(ico, {
+    keyframes: {
+      '0%':   { y: 0    },
+      '40%':  { y: -4   },
+      '60%':  { y: -5   },
+      '100%': { y: 0    },
+    },
+    duration: 2800 + i * 200,        // each icon slightly different speed
+    delay:    i * 160,               // staggered start
+    ease:     'inOutSine',
+    loop:     true,
+  });
+});
+
+// ─────────────────────────────────────────────────────────────
+// EXTRA: Filter bar color accent on active tag
+// animate border-color of .bar on card hover using anime
+// ─────────────────────────────────────────────────────────────
+document.querySelectorAll('.tag.ts').forEach(tag => {
+  const a = createAnimatable(tag, {
+    scale: { ease: spring({ stiffness: 500, damping: 20 }), duration: 500 },
+  });
+  tag.closest('.card')?.addEventListener('mouseenter', () => a.scale(1.06));
+  tag.closest('.card')?.addEventListener('mouseleave', () => a.scale(1));
+});
+
+// ─────────────────────────────────────────────────────────────
+// EXTRA: Changelog version number — splitText on .cl-ver-num
+// Chars drop in when that tab first opens
+// ─────────────────────────────────────────────────────────────
+let changelogSplitDone = false;
+function animateChangelogNums() {
+  if (changelogSplitDone) return;
+  changelogSplitDone = true;
+  document.querySelectorAll('.cl-ver-num').forEach((el, i) => {
+    if (typeof splitText !== 'function') return;
+    const split = splitText(el, { chars: true });
+    set(split.chars, { opacity: 0, y: -12, rotateX: 90 });
+    animate(split.chars, {
+      opacity:  [0, 1],
+      y:        [-12, 0],
+      rotateX:  [90, 0],
+      ease:     'outExpo',
+      duration: 420,
+      delay:    stagger(50, { start: i * 80 }),
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// EXTRA: Stagger cl-item rows within each version
+// ─────────────────────────────────────────────────────────────
+function animateChangelogItems() {
+  document.querySelectorAll('.cl-ver').forEach((ver, vi) => {
+    const items = ver.querySelectorAll('.cl-item');
+    set(items, { opacity: 0, x: -12 });
+    animate(items, {
+      opacity: [0, 1],
+      x:       [-12, 0],
+      ease:    'outExpo',
+      duration: 380,
+      delay:   stagger(40, { start: vi * 30 }),
+    });
+  });
+}
+
+// ─────────────────────────────────────────────────────────────
+// 11. AMBIENT LOOP — hero glow breathes via createTimer + CSS var
+//     Uses damp() utility for smooth interpolation
+// ─────────────────────────────────────────────────────────────
+let glowTarget = 0.06, glowCurrent = 0.06;
+const hero = document.querySelector('.hero');
+createTimer({
+  duration: Infinity,
+  onUpdate(t) {
+    // oscillate target every ~3s using sin
+    glowTarget = 0.10 + 0.10 * (0.5 + 0.5 * Math.sin(t.currentTime / 2200));
+    glowCurrent = damp(glowCurrent, glowTarget, 0.04, 0.016);
+    if (hero) hero.style.setProperty('--hero-glow', glowCurrent.toFixed(4));
+  },
+});
+
+// ─────────────────────────────────────────────────────────────
+// 12. AMBIENT LOOP — signal dot in logo pulses
+// ─────────────────────────────────────────────────────────────
+animate('.sb-name', {
+  color: ['#000000', '#333333', '#000000'],
+  ease: 'inOutSine',
+  duration: 3000,
+  loop: true,
+});
+
+// ─────────────────────────────────────────────────────────────
+// 13. SIDEBAR DRAWER — anime open/close
+// ─────────────────────────────────────────────────────────────
+function openSidebar() {
+  const sb = document.querySelector('.sb');
+  const ov = document.getElementById('sb-overlay');
+  sb.classList.add('open');
+  ov.classList.add('on');
+  set(sb, { translateX: '-100%' });
+  animate(sb, { translateX: '0%', duration: 360, ease: 'outExpo' });
+  animate(ov, { opacity: [0,1],   duration: 280, ease: 'outQuad' });
+}
+function closeSidebarAnimated() {
+  const sb = document.querySelector('.sb');
+  const ov = document.getElementById('sb-overlay');
+  animate(sb, {
+    translateX: '-100%', duration: 260, ease: 'inExpo',
+    onComplete: () => sb.classList.remove('open'),
+  });
+  animate(ov, {
+    opacity: 0, duration: 220, ease: 'inQuad',
+    onComplete: () => { ov.classList.remove('on'); set(ov, { opacity: 1 }); },
+  });
+}
+// sidebar drawer (mobile)
+function toggleSidebar(){
+  const isOpen = document.querySelector('.sb').classList.contains('open');
+  if(isOpen) closeSidebar(); else openSidebar();
+}
+function closeSidebar(){ closeSidebarAnimated(); }
+
+
+
+// tab switching
+let curTab='home';
+const pageHistory=['home'];
+
+function updateBackBtn(){
+  const btn=document.getElementById('back-btn');
+  if(!btn)return;
+  btn.style.opacity=pageHistory.length>1?'1':'0.25';
+  btn.style.pointerEvents=pageHistory.length>1?'auto':'none';
+}
+
+// Map tab id → bottom nav id
+const bnMap={home:'home',play:'play',search:'play',queue:'queue',controls:'queue',
+  filter:'filter',playlist:'filter',liked:'filter',dj:'more',config:'more',
+  utility:'more',sources:'more',autoplay:'more',changelog:'more'};
+
+function showTab(id,sbEl,fromBack){
+  if(id===curTab&&!fromBack)return;
+  if(!fromBack){pageHistory.push(id);}
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  document.querySelectorAll('.sb-a').forEach(a=>a.classList.remove('on'));
+  const pg=document.getElementById('p-'+id);
+  if(pg){pg.classList.add('on');pg.scrollTop=0;window.scrollTo(0,0);}
+  document.querySelectorAll('.tab[data-tab="'+id+'"]').forEach(t=>t.classList.add('on'));
+  if(sbEl)sbEl.classList.add('on');
+  else document.querySelectorAll('.sb-a').forEach(a=>{if(a.getAttribute('onclick')&&a.getAttribute('onclick').includes("'"+id+"'"))a.classList.add('on');});
+  curTab=id;
+  updateBackBtn();
+  closeSidebar();
+  document.getElementById('no-r').style.display='none';
+  // sync bottom nav
+  const bnId=bnMap[id]||'more';
+  document.querySelectorAll('.bnav-btn').forEach(b=>b.classList.remove('on'));
+  const bn=document.getElementById('bn-'+bnId);
+  if(bn)bn.classList.add('on');
+  // scroll active tab into view
+  const activeTab=document.querySelector('.tab.on');
+  if(activeTab)activeTab.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  document.getElementById('qi').value='';
+  document.querySelectorAll('.card').forEach(c=>c.classList.remove('hidden'));
+  // animate the new page
+  if(id!=='home') animatePageCards(id);
+  else animateOvCards();
+  // setup scroll-triggered anims for pages that need them
+  if(id==='changelog' || id==='autoplay') setupScrollAnims(id);
+  // special per-page extras
+  if(id==='changelog') { animateChangelogNums(); animateChangelogItems(); }
+}
+
+function goBack(){
+  if(pageHistory.length<=1)return;
+  pageHistory.pop();
+  const prev=pageHistory[pageHistory.length-1];
+  showTab(prev,null,true);
+}
+
+updateBackBtn();
+
+// search — searches across all pages, switches to first match page
+function _doSearch(q){
+  q=q.toLowerCase().trim();
+  const nr=document.getElementById('no-r');
+  if(!q){
+    document.querySelectorAll('.card').forEach(c=>c.classList.remove('hidden'));
+    nr.style.display='none';
+    return;
+  }
+  let found=0,firstPage=null;
+  document.querySelectorAll('.card').forEach(c=>{
+    const match=c.textContent.toLowerCase().includes(q);
+    c.classList.toggle('hidden',!match);
+    if(match){
+      found++;
+      const page=c.closest('.page');
+      if(page&&!firstPage)firstPage=page.id.replace('p-','');
+    }
+  });
+  if(firstPage&&firstPage!==curTab)showTab(firstPage,null);
+  nr.style.display=found===0?'block':'none';
+}
+
+// swipe to open sidebar on mobile
+let touchStartX=0;
+document.addEventListener('touchstart',e=>{touchStartX=e.touches[0].clientX;},{passive:true,capture:false});
+document.addEventListener('touchend',e=>{
+  const dx=e.changedTouches[0].clientX-touchStartX;
+  if(touchStartX<24&&dx>60)toggleSidebar();
+  else if(dx<-60&&document.querySelector('.sb').classList.contains('open'))closeSidebar();
+},{passive:true});
+
+// ══════════════════════════════════════════════════════════════
+// DESIGN SPELLS MICRO-INTERACTIONS + MINIMAL GALLERY FEATURES
+// ══════════════════════════════════════════════════════════════
+
+// ── Toast (Design Spells tactile feedback) ─────────────────
+function showToast(msg, duration=2000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// ── Copy command to clipboard (click mg-card) ─────────────
+function copyCmd(el, cmd) {
+  navigator.clipboard?.writeText(cmd).then(() => {
+    showToast('Copied: ' + cmd);
+    // Design Spells: micro bounce on the card
+    const { animate: a, spring: sp } = anime;
+    a(el, { scale: [1, .96, 1], duration: 300, ease: sp({ stiffness: 400, damping: 15 }) });
+  }).catch(() => showToast(cmd));
+}
+
+// ── Confetti (Design Spells magic moment) ──────────────────
+function launchConfetti() {
+  const canvas = document.getElementById('confetti-canvas');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const theme = document.documentElement.getAttribute('data-theme');
+  const isDark = theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme:dark)').matches);
+  const colours = isDark
+    ? ['#fff','#ccc','#aaa','#888','#ffffff88']
+    : ['#000','#333','#555','#888','#00000033'];
+  const pieces = Array.from({length: 80}, () => ({
+    x: Math.random() * canvas.width,
+    y: -10 - Math.random() * 60,
+    r: 2 + Math.random() * 4,
+    d: 1 + Math.random() * 3,
+    c: colours[Math.floor(Math.random() * colours.length)],
+    tilt: Math.random() * 10 - 5,
+    tiltAngle: 0,
+    tiltAngleIncrement: Math.random() * 0.07 + 0.05,
+  }));
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    pieces.forEach(p => {
+      p.tiltAngle += p.tiltAngleIncrement;
+      p.y += p.d;
+      p.tilt = Math.sin(p.tiltAngle) * 12;
+      ctx.beginPath();
+      ctx.lineWidth = p.r;
+      ctx.strokeStyle = p.c;
+      ctx.moveTo(p.x + p.tilt + p.r/2, p.y);
+      ctx.lineTo(p.x + p.tilt, p.y + p.tilt + p.r/2);
+      ctx.stroke();
+    });
+    frame++;
+    if (frame < 120) requestAnimationFrame(draw);
+    else ctx.clearRect(0,0,canvas.width,canvas.height);
+  }
+  draw();
+}
+
+// ── Tag filter for Minimal Gallery grid ────────────────────
+function filterMG(pageId, tag, btn) {
+  const grid = document.getElementById('g-' + pageId);
+  if (!grid) return;
+  const cards = grid.querySelectorAll('.mg-card');
+  // update button state
+  if (btn) {
+    btn.closest('.tag-filter').querySelectorAll('.tf-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  let shown = 0;
+  cards.forEach((c, i) => {
+    const tags = (c.dataset.tags || '') + ' ' + (c.dataset.c || '');
+    const match = tag === 'all' || tags.includes(tag);
+    c.classList.toggle('filtered', !match);
+    if (match) {
+      shown++;
+      // stagger re-entrance (Design Spells entrance animation)
+      c.style.cssText += ';animation:none';
+      c.offsetHeight;
+      c.style.cssText = c.style.cssText.replace(';animation:none','');
+      c.style.animationDelay = (shown * 40) + 'ms';
+    }
+  });
+  const countEl = document.getElementById(pageId + '-count');
+  if (countEl) countEl.textContent = shown + ' command' + (shown !== 1 ? 's' : '');
+}
+
+// ── Keyboard shortcuts (Minimal Gallery has these) ─────────
+document.addEventListener('keydown', e => {
+  // K = focus search
+  if (e.key === 'k' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+    e.preventDefault();
+    document.getElementById('qi')?.focus();
+    return;
+  }
+  // D = toggle dark mode
+  if (e.key === 'd' && !e.ctrlKey && !e.metaKey && document.activeElement.tagName !== 'INPUT') {
+    toggleTheme();
+    return;
+  }
+  // Arrow keys = prev/next tab
+  if ((e.key === 'ArrowLeft' || e.key === 'ArrowRight') && document.activeElement.tagName !== 'INPUT') {
+    const tabs = ['home','play','search','queue','controls','filter','playlist','liked','dj','config','utility','sources','autoplay','changelog'];
+    const idx = tabs.indexOf(curTab);
+    if (e.key === 'ArrowLeft' && idx > 0) showTab(tabs[idx-1], null);
+    if (e.key === 'ArrowRight' && idx < tabs.length-1) showTab(tabs[idx+1], null);
+  }
+});
+
+// ── Design Spells: confetti on first search result ─────────
+let hasConfettied = false;
+function doSearch(q) {
+  _doSearch(q);
+  if (q && q.length > 2 && !hasConfettied) {
+    hasConfettied = true;
+    setTimeout(launchConfetti, 150);
+    showToast('✦ Found it!', 1500);
+  }
+}
+
+// ── Design Spells: easter egg — type "magic" anywhere ──────
+let eggBuffer = '';
+document.addEventListener('keydown', e => {
+  if (document.activeElement.tagName === 'INPUT') return;
+  eggBuffer += e.key.toLowerCase();
+  eggBuffer = eggBuffer.slice(-5);
+  if (eggBuffer === 'magic') {
+    launchConfetti();
+    showToast('✦ You found the spell!', 3000);
+    eggBuffer = '';
+  }
+});
+
+// ── Design Spells: double-tap logo = confetti ──────────────
+let logoTaps = 0;
+document.querySelector('.sb-name')?.addEventListener('click', () => {
+  logoTaps++;
+  if (logoTaps === 2) { launchConfetti(); logoTaps = 0; }
+  setTimeout(() => { logoTaps = 0; }, 600);
+});
+
+
+</script>
+
+<!-- Sidebar overlay (mobile) -->
+<div id="sb-overlay" onclick="closeSidebar()"></div>
+
+<!-- Bottom navigation (mobile only) -->
+<nav id="bottom-nav">
+  <button class="bnav-btn on" id="bn-home"   onclick="showTab('home',null)"><span class="bico">◈</span><span class="bl">Home</span></button>
+  <button class="bnav-btn"    id="bn-play"   onclick="showTab('play',null)"><span class="bico">♫</span><span class="bl">Play</span></button>
+  <button class="bnav-btn"    id="bn-queue"  onclick="showTab('queue',null)"><span class="bico">≡</span><span class="bl">Queue</span></button>
+  <button class="bnav-btn"    id="bn-filter" onclick="showTab('filter',null)"><span class="bico">◈</span><span class="bl">Filters</span></button>
+  <button class="bnav-btn"    id="bn-more"   onclick="toggleSidebar()"><span class="bico">⋯</span><span class="bl">More</span></button>
+</nav>
+</body>
+</html>
